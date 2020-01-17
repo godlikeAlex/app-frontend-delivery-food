@@ -8,7 +8,78 @@
 
 .restaurant-item {
     background: white;
-    width: 33%;
     box-shadow: 0px 1px 3px #D4D4D5;
     border-radius: 8px;
+    transition: .3s;
+}
+
+.restaurant-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 16px #b8b8bb;
+}
+
+.restaurant-image {
+    height: 185px;
+    width: 100%;
+    background-position: center;
+    background-size: cover !important;
+    border-radius: 8px 8px 0 0;
+}
+
+.restaurant-name {
+    font-weight: 700;
+    font-size: 25px;
+    color: #333;
+}
+
+.restaurant-time-work {
+    font-size: 12px;
+    padding-top: 5px;
+}
+
+.restaurant-order-from {
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.categories {
+    color: #7b7b7b;
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+.category-dot {
+    position: relative;
+    padding-left: 15px;
+}
+
+.category-dot::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: #7b7b7b;
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(0%, -50%);
+    left: 5px;
+}
+
+.main-info-restaurant {
+    padding: 15px;
+}
+
+.delivery-time {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+
+.ui.placeholder .rectangular.image:not(.header)
+{
+    padding-top: 185px !important;
 }
