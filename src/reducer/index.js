@@ -1,14 +1,18 @@
-import {ADD_TO_CART} from '../types';
+import {SET_LOCATION} from '../types';
 
 const initalState = {
-    location: null
+    location: JSON.parse(localStorage.getItem('location')) || {
+        position: null,
+        address: null
+    }
 };
 
 const locationReducer = (state = initalState, action) => {
+    console.log(action);
     switch(action.type) {
-        case ADD_TO_CART: return {
+        case SET_LOCATION: return {
             ...state,
-            location: state.location
+            location: action.payload
         }
         default: return state;
     }
