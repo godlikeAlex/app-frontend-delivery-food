@@ -19,9 +19,9 @@
 }
 
 .restaurant-image {
-    height: 185px;
+    height: 200px;
     width: 100%;
-    background-position: center;
+    background-position: center !important;
     background-size: cover !important;
     border-radius: 8px 8px 0 0;
 }
@@ -78,8 +78,31 @@
     font-size: 13px;
 }
 
+.categories-restaurant {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
 
 .ui.placeholder .rectangular.image:not(.header)
 {
     padding-top: 185px !important;
+}
+
+.fullname-address {
+    padding-top: 25px;
+    text-align: center;
+}
+
+.select-btn {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+.load-more {
+    padding: 25px 0px;
+    display: flex;
+    justify-content: center;
 }
