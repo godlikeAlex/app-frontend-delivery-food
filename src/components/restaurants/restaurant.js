@@ -1,65 +1,47 @@
 import React, {useState, useEffect} from 'react';
-import {Container, Header, Input, Grid, Placeholder, Button, Dropdown} from 'semantic-ui-react';
+import {Container, Header, Input, Grid, Button} from 'semantic-ui-react';
 import './restaurant.css';
 import Moto from './moto.svg';
 import {placeholderRestaurants} from '../placeholders';
 import {getFilteredProducts, getAllCategories} from '../core/API.js';
 import {linkImageRestaurant} from '../core/restaurantImg';
+import SliderCategories from './sliderCategories';
 
-const options = [
-    {
-      key: 'today',
-      text: 'today',
-      value: 'today',
-      content: 'Today',
-    },
-    {
-      key: 'this week',
-      text: 'this week',
-      value: 'this week',
-      content: 'This Week',
-    },
-    {
-      key: 'this month',
-      text: 'this month',
-      value: 'this month',
-      content: 'This Month',
-    },
-  ]
+import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from '../../actions';
 
-const Restaurants = () => {
+const Restaurants = ({setCategories, filters, categories, setRestaurants, restaurants}) => {
     const [values, setValues] = useState({
-        restaurants: [], 
         placeholder: true,
         limit: 6,
         skip: 0,
         size: 0,
         error: '',
-        filters: [],
-        categories: [],
         loading: true
     });
 
-    const [categories, setCategories] = useState([]);
-
-    const {loading, placeholder, filters, skip, limit, restaurants} = values;
+    const {loading, placeholder, skip, limit} = values;
 
     useEffect(() => {
-        getAllCategories().then(data => {
-            if(data.err) {
-                setValues({...values, error: data.err})
-            } else {
-                setCategories(data);
-            }
-        })
+        if(categories.length <= 0) {
+            getAllCategories().then(data => {
+                if(data.err) {
+                    setValues({...values, error: data.err})
+                } else {
+                    setCategories(data);
+                }
+            })
+        }
 
         loadFiltredResults(skip, limit, filters);
-    }, []);
+    }, [filters]);
 
     const loadFiltredResults = (skip, limit, filters) => {
         getFilteredProducts(skip, limit, filters).then(restaurants => {
             if(restaurants.err) setValues({...values, error: restaurants.err})
-            setValues({...values, placeholder: false, loading: false, size: restaurants.size, skip:0, restaurants: restaurants.restaurants});
+            setValues({...values, placeholder: false, loading: false, size: restaurants.size, skip:0});
+            setRestaurants(restaurants.restaurants);
         })
         
     }
@@ -68,8 +50,6 @@ const Restaurants = () => {
         let toSkip = skip + limit;
         setValues({...values, loading: true});
         getFilteredProducts(toSkip, limit, filters).then(data => {
-            console.log(data);
-
             if(data.err) {
                 setValues({...values, error: data.err, loading: false})
             } else {
@@ -104,23 +84,6 @@ const Restaurants = () => {
             ))}
         </React.Fragment>
     );
-
-    // const handleFilters = (myFilters, filterBy = 'category') => {
-    //     const newFilters = {...filters};
-    //     newFilters.filters[filterBy] = myFilters;
-
-    //     setValues({myFilters})
-    // }
-
-    const loadCategories = () => (
-        <React.Fragment>
-            <Button inverted color='orange'>Все</Button>
-            {/* {categories && categories.map((category, i) => (
-                <Button onClick={handleFilters} inverted color='orange' key={i}>{category.name}</Button>
-            ))} */}
-            <Dropdown style={{width: '100%', textAlign: 'right'}} text='Еще' options={options} />
-        </React.Fragment>
-    )
     
     return (
         <Container>
@@ -128,8 +91,8 @@ const Restaurants = () => {
                 <Header as='h2' style={{margin: '0px', fontSize: '35px'}}>Рестораны</Header>
                 <Input style={{width: '255px'}} icon='search' placeholder='Найти ресторан...' />
             </div>
-            <div className='categories-restaurant'>
-                {loadCategories()}
+            <div >
+                <SliderCategories />
             </div>
             <Grid stackable columns={3} style={{marginTop: '20px'}}>
                 {placeholder ? placeholderRestaurants() : eachRestaurants()}             
@@ -141,4 +104,29 @@ const Restaurants = () => {
     )
 };
 
-export default Restaurants;
+const mapStateToProps = ({filters, restaurants,category}) => {
+    return {
+        filters,
+        restaurants,
+        categories: category.categories
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    const {setCategories, setFilters, setRestaurants} = bindActionCreators(actions, dispatch);
+
+    return {
+        setCategories: categories => {
+            setCategories(categories);
+        },
+        setFilters: filters => {
+            console.log(filters);
+            setFilters(filters);
+        },
+        setRestaurants: restaurants => {
+            setRestaurants(restaurants)
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Restaurants);

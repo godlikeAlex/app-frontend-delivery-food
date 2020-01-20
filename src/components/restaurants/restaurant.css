@@ -26,6 +26,19 @@
     border-radius: 8px 8px 0 0;
 }
 
+.slider-item button {
+    width: 100%;
+    padding: 11px 0px !important;
+}
+
+.slick-prev:before, .slick-next:before {
+    color: #ff6500 !important;
+}
+
+.slider-item {
+    padding: 0.5rem;
+}
+
 .restaurant-name {
     font-weight: 700;
     font-size: 25px;
@@ -79,8 +92,6 @@
 }
 
 .categories-restaurant {
-    display: flex;
-    align-items: center;
     margin-top: 20px;
 }
 
