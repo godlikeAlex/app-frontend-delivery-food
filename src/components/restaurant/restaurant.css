@@ -33,6 +33,7 @@
 
 .slick-prev:before, .slick-next:before {
     color: #ff6500 !important;
+    
 }
 
 .slider-item {
@@ -53,6 +54,7 @@
 .restaurant-order-from {
     font-size: 14px;
     font-weight: 700;
+    color: #333;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -119,14 +121,15 @@
 }
 
 .head-restaurant {
-    height: 250px;
+    height: 300px;
     background: url('https://eda.yandex/images/1368744/0e677541c2133eaedd02a37a77172d5c-1100x825.jpg');
     background-size: cover !important;
+    background-position: center;
 }
 
 .head-restaurant::before {
     content: '';
-    background: linear-gradient(90deg, rgba(255, 92, 0, 0.19) 0%, rgba(47, 47, 47, 0.65) 100%);
+    background: linear-gradient(90deg, rgba(45, 45, 45, 0.91) 0%, rgba(47, 47, 47, 0.31) 100%);
     width:100%;
     height: 100%;
     position: absolute;
@@ -141,4 +144,92 @@
     height: 100%;
     display: flex !important;
     align-items: center;
+    position: relative;
+}
+
+.centered-head-restaurant {
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
+}
+
+.main-info-header-rest {
+    display: flex;
+    font-weight: 700;
+}
+
+.main-info-header-rest img {
+    padding-right: 10px;
+}
+
+.main-info-header-rest span {
+    display: flex;
+    margin-left: 50px;
+    position: relative;
+}
+
+.main-info-header-rest span:first-child {
+    margin-left: 0px;
+}
+
+.main-info-header-rest span:first-child::before {
+    display: none;
+}
+
+.main-info-header-rest span::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: -20%;
+    transform: translate(0%, -50%);
+    border-radius: 50%;
+}
+
+.restaurant-menu {
+    padding: 5px 0px;
+    border-bottom: 1px solid #ececec;
+    height: 35px;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.menu-item {
+    background: #FFFFFF;
+    border: 1px solid rgb(241, 241, 241);
+    color: #333;
+    padding-left:15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    border-radius: 3px;
+    padding-top: 15px;
+}
+
+.menu-item-price {
+    font-weight: 700;
+    padding-top: 15px;
+}
+
+.menu-item-desc {
+    padding-top: 10px;
+}
+
+.menu-item-image {
+    height: 250px;
+    background-size: cover !important;
+    background-position: center !important;
+    border-radius: 10px;
+}
+
+.menu-item-name {
+    font-weight: 700;
+    font-size: 16px;
+    padding-top: 15px;
+}
+
+.category-menu-section {
+    padding: 25px 0px;
 }

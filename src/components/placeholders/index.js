@@ -33,35 +33,5 @@ export const placeholderRestaurants = () => (
                         </Placeholder.Header>
                     </Placeholder>
             </Grid.Column>
-            <Grid.Column>
-                <Placeholder>
-                        <Placeholder.Image rectangular />
-                        <Placeholder.Header>
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        </Placeholder.Header>
-                    </Placeholder>
-            </Grid.Column>
-            <Grid.Column>
-                <Placeholder>
-                        <Placeholder.Image rectangular />
-                        <Placeholder.Header>
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        </Placeholder.Header>
-                    </Placeholder>
-            </Grid.Column>
-            <Grid.Column>
-                <Placeholder>
-                        <Placeholder.Image rectangular />
-                        <Placeholder.Header>
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        <Placeholder.Line />
-                        </Placeholder.Header>
-                    </Placeholder>
-            </Grid.Column>
     </React.Fragment>
 );

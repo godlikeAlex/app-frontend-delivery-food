@@ -8,6 +8,14 @@ export const getRestaurants = (sortBy) => {
     }).catch(err => console.log(err));
 };
 
+export const getRestaurant = (id) => {
+    return fetch(`${API}/restaurant/${id}`, {
+        method: 'GET'
+    }).then(data => {
+        return data.json();
+    }).catch(err => console.log(err));
+};
+
 export const getFilteredProducts = (skip, limit, filters = {}) => {
     const data = {skip, limit, filters};
 

@@ -6,6 +6,7 @@ import {placeholderRestaurants} from '../placeholders';
 import {getFilteredProducts, getAllCategories} from '../core/API.js';
 import {linkImageRestaurant} from '../core/restaurantImg';
 import SliderCategories from '../restaurant/sliderCategories';
+import {Link} from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -24,6 +25,7 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
     const {loading, placeholder, skip, limit} = values;
 
     useEffect(() => {
+        setValues({...values, loading: true, placeholder: true})
         if(categories.length <= 0) {
             getAllCategories().then(data => {
                 if(data.err) {
@@ -33,9 +35,10 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
                 }
             })
         }
-
         loadFiltredResults(skip, limit, filters);
     }, [filters]);
+
+
 
     const loadFiltredResults = (skip, limit, filters) => {
         getFilteredProducts(skip, limit, filters).then(restaurants => {
@@ -61,27 +64,29 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
     const eachRestaurants = () => (
         <React.Fragment>
             {restaurants && restaurants.map((restaurant, key) => (
-                <Grid.Column>
-                    <div className='restaurant-item' key={key}>
-                        <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}></div>
-                        <div className="main-info-restaurant">
-                            <div className="restaurant-name">{restaurant.name}</div>
-                            <div className='categories'>
-                                {restaurant.category.map((category, index) => (
-                                    <span className={index % 2 !== 0 ? 'category-dot' : ''}>{category.name} </span>
-                                ))}
-                            </div>
-                            {/* <div className="restaurant-time-work"><Icon name='clock outline' />Открыто целый день.</div> */}
-                            <div className="restaurant-order-from">
-                                От {restaurant.order_from} Сум
-                                <div className='delivery-time'>
-                                    <img style={{paddingRight: '5px'}} src={Moto} alt=""/> {restaurant.delivery_time} мин
+                    <Grid.Column>
+                        <Link to={`/restaurant/${restaurant._id}`}>
+                        <div className='restaurant-item' key={key}>
+                            <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}></div>
+                            <div className="main-info-restaurant">
+                                <div className="restaurant-name">{restaurant.name}</div>
+                                <div className='categories'>
+                                    {restaurant.category.map((category, index) => (
+                                        <span className={index % 2 !== 0 ? 'category-dot' : ''}>{category.name} </span>
+                                    ))}
+                                </div>
+                                {/* <div className="restaurant-time-work"><Icon name='clock outline' />Открыто целый день.</div> */}
+                                <div className="restaurant-order-from">
+                                    От {restaurant.order_from} Сум
+                                    <div className='delivery-time'>
+                                        <img style={{paddingRight: '5px'}} src={Moto} alt=""/> {restaurant.delivery_time} мин
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </Grid.Column>
-            ))}
+                        </Link>
+                    </Grid.Column> 
+                    ))}
         </React.Fragment>
     );
     

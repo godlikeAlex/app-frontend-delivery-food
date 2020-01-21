@@ -46,6 +46,11 @@ const settings = {
 const SliderCategories = ({categories, handleCategory, currentCategory, setFilters, setCurrentCategory}) => {
 
   const handleClick = id => {
+    if(id === 'all') {
+      setCurrentCategory('all');
+      setFilters({category: {}});
+      return;
+    }
     setCurrentCategory(id);
     setFilters({category: id});
   }
@@ -56,7 +61,7 @@ const SliderCategories = ({categories, handleCategory, currentCategory, setFilte
             {...settings}
         >
                 <div className='slider-item'>
-                    <Button active={currentCategory === 'all'} inverted color='orange'>Все</Button>
+                    <Button active={currentCategory === 'all'} onClick={() => handleClick('all')} inverted color='orange'>Все</Button>
                 </div>
             {categories && categories.map((category, i) => (
                 <div className='slider-item' key={i}>
