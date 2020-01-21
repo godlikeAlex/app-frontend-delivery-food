@@ -1,4 +1,4 @@
-import {SET_LOCATION, SET_CATEGORIES, SET_CURRENT_CATEGORY, SET_RESTAURANTS} from '../types';
+import {SET_LOCATION, SET_CATEGORIES, SET_CURRENT_CATEGORY, SET_RESTAURANTS, SET_RESTAURANT} from '../types';
 import { SET_FILTER } from '../types/index';
 
 const initalState = {
@@ -13,7 +13,8 @@ const initalState = {
     filters: {
         category: ''
     },
-    restaurants: []
+    restaurants: [],
+    restaurant: {}
 };
 
 const locationReducer = (state = initalState, action) => {
@@ -44,7 +45,10 @@ const locationReducer = (state = initalState, action) => {
             ...state,
             restaurants: action.payload
         }
-
+        case SET_RESTAURANT: return {
+            ...state,
+            restaurant: action.payload
+        }
         default: return state;
     }
 };
