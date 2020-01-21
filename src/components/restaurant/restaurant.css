@@ -117,3 +117,28 @@
     display: flex;
     justify-content: center;
 }
+
+.head-restaurant {
+    height: 250px;
+    background: url('https://eda.yandex/images/1368744/0e677541c2133eaedd02a37a77172d5c-1100x825.jpg');
+    background-size: cover !important;
+}
+
+.head-restaurant::before {
+    content: '';
+    background: linear-gradient(90deg, rgba(255, 92, 0, 0.19) 0%, rgba(47, 47, 47, 0.65) 100%);
+    width:100%;
+    height: 100%;
+    position: absolute;
+}
+
+.head-restaurant {
+    color: white;
+    position: relative;
+}
+
+.head-restaurant-content {
+    height: 100%;
+    display: flex !important;
+    align-items: center;
+}

@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Header, Input, Grid, Button} from 'semantic-ui-react';
-import './restaurant.css';
-import Moto from './moto.svg';
+import '../restaurant/restaurant.css';
+import Moto from '../restaurant/moto.svg';
 import {placeholderRestaurants} from '../placeholders';
 import {getFilteredProducts, getAllCategories} from '../core/API.js';
 import {linkImageRestaurant} from '../core/restaurantImg';
-import SliderCategories from './sliderCategories';
+import SliderCategories from '../restaurant/sliderCategories';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 
-const Restaurants = ({setCategories, filters, categories, setRestaurants, restaurants}) => {
+const Home = ({setCategories, filters, categories, setRestaurants, restaurants}) => {
     const [values, setValues] = useState({
         placeholder: true,
         limit: 6,
@@ -129,4 +129,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Restaurants);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
