@@ -1,4 +1,4 @@
-import {SET_CATEGORIES, SET_LOCATION, SET_CURRENT_CATEGORY, SET_FILTER, SET_RESTAURANTS, SET_RESTAURANT} from '../types';
+import {SET_CATEGORIES, SET_LOCATION, SET_CURRENT_CATEGORY, SET_FILTER, SET_RESTAURANTS, SET_RESTAURANT, SET_DISH} from '../types';
 
 export const setLocation = payload => {
     return {
@@ -38,6 +38,13 @@ export const setRestaurants = payload => {
 export const setRestaurant = payload => {
     return {
         type: SET_RESTAURANT,
+        payload
+    }
+};
+
+export const setDish = payload => {
+    return {
+        type: SET_DISH,
         payload
     }
 };
