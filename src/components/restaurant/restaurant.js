@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image} from 'semantic-ui-react';
+import {Container, Icon, Grid, Modal, Button, Image, Checkbox} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -49,16 +49,17 @@ const settings = {
 // TODO LOADING!!!!
 // TODO LOADING!!!!
 // TODO LOADING!!!!
-const Restaurant = ({match, restaurant, setRestaurant}) => {
+const Restaurant = ({match, restaurant, setRestaurant, dish, setDish}) => {
     const [open, setOpen] = useState(false);
-    const [product, setProduct] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const id = match.params.id;
+        setLoading(true);
         getRestaurant(id).then(rest => {
             if(rest.err) console.log(rest.err);
-            
             setRestaurant(rest.data);
+            setLoading(false);
         })
     }, [match.params.id]);
 
@@ -66,22 +67,34 @@ const Restaurant = ({match, restaurant, setRestaurant}) => {
         console.log('dsadsa');
     }
 
+    const handleOption = option => e => {
+        console.log(option); 
+    }
+
     const ModalProduct = () => (
         <Modal size='small' open={open} onClose={() => setOpen(false)}>
           <Modal.Content>
               <Modal.Description>
-                <Image src={`${linkMenuItemImage(product._id)}` } fluid />
-                <h2>{product.name}</h2>
-                <p>{product.description}</p>
-                <p><b>{product.price} Сум</b></p>
-                <Button color='orange' style={{width: '100%'}}>Добавить в корзину на {product.price} СУМ</Button>
+                <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
+                <h2>{dish.name}</h2>
+                <p>{dish.description}</p>
+                <p>
+                    <h3>Дополнительно</h3>
+                    {dish.options.length > 0 && dish.options.map(option => (
+                        <div style={{paddingTop: '10px'}}>
+                            <Checkbox value={option} onChange={handleOption(option)} label={`${option.name} + ${option.price} сум`} />
+                        </div>
+                    ))}
+                </p>
+                <p><b>{dish.price} Сум</b></p>
+                <Button color='orange' style={{width: '100%'}}>Добавить в корзину на {dish.price} СУМ</Button>
             </Modal.Description>
           </Modal.Content>
         </Modal>
     )
 
-    const showDetails = (product) => {
-        setProduct(product);
+    const showDetails = dish => {
+        setDish(dish);
         setOpen(true);
     }
 
@@ -136,18 +149,22 @@ const Restaurant = ({match, restaurant, setRestaurant}) => {
     )
 }
 
-const mapStateToProps = ({restaurant}) => {
+const mapStateToProps = ({restaurant, dish}) => {
     return {
-        restaurant
+        restaurant,
+        dish
     }
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setRestaurant} = bindActionCreators(actions, dispatch);
+    const {setRestaurant, setDish} = bindActionCreators(actions, dispatch);
 
     return {
         setRestaurant: restaurant => {
             setRestaurant(restaurant);
+        },
+        setDish: dish => {
+            setDish(dish);
         }
     }
 }
