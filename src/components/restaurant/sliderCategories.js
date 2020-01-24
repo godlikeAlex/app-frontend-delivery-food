@@ -43,7 +43,7 @@ const settings = {
       ]
 };
 
-const SliderCategories = ({categories, handleCategory, currentCategory, setFilters, setCurrentCategory}) => {
+const SliderCategories = ({categories, setLoadMoreData, currentCategory, setFilters, setCurrentCategory}) => {
 
   const handleClick = id => {
     if(id === 'all') {
@@ -51,6 +51,7 @@ const SliderCategories = ({categories, handleCategory, currentCategory, setFilte
       setFilters({category: {}});
       return;
     }
+    setLoadMoreData({skip: 0, size: 0})
     setCurrentCategory(id);
     setFilters({category: id});
   }
@@ -81,7 +82,7 @@ const mapStateToProps = ({category, filters}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  const {setCurrentCategory, setFilters} = bindActionCreators(actions, dispatch);
+  const {setCurrentCategory, setFilters, setLoadMoreData} = bindActionCreators(actions, dispatch);
 
   return {
     setCurrentCategory: category => {
@@ -90,6 +91,9 @@ const mapDispatchToProps = dispatch => {
     setFilters: filters => {
       setFilters(filters);
     },
+    setLoadMoreData: data => {
+      setLoadMoreData(data);
+    }
   }
 }
 

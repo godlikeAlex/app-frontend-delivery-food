@@ -12,20 +12,18 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 
-const Home = ({setCategories, filters, categories, setRestaurants, restaurants}) => {
+const Home = ({setCategories, filters, setLoadMoreData, categories, setRestaurants, loadMoreRestaurants, restaurants, loadMoreData}) => {
     const [values, setValues] = useState({
         placeholder: true,
-        limit: 6,
-        skip: 0,
-        size: 0,
         error: '',
         loading: true
     });
 
-    const {loading, placeholder, skip, limit} = values;
+    const {skip, size, limit} = loadMoreData;
 
     useEffect(() => {
-        setValues({...values, loading: true, placeholder: true})
+        setValues({...values, loading: true, placeholder: true});
+    
         if(categories.length <= 0) {
             getAllCategories().then(data => {
                 if(data.err) {
@@ -43,7 +41,8 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
     const loadFiltredResults = (skip, limit, filters) => {
         getFilteredProducts(skip, limit, filters).then(restaurants => {
             if(restaurants.err) setValues({...values, error: restaurants.err})
-            setValues({...values, placeholder: false, loading: false, size: restaurants.size, skip:0});
+            setValues({...values, placeholder: false, loading: false});
+            setLoadMoreData({size: restaurants.size, skip:0});
             setRestaurants(restaurants.restaurants);
         })
         
@@ -56,10 +55,19 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
             if(data.err) {
                 setValues({...values, error: data.err, loading: false})
             } else {
-                setValues({...values, restaurants: [...restaurants, ...data.restaurants], size: data.size, skip: toSkip, loading: false});
+                setLoadMoreData({size: data.size, skip: toSkip});
+                loadMoreRestaurants(data.restaurants);
             }
         })
     }
+
+    const loadMoreButton = () => {
+        return (
+            size > 0 && size >= limit && (
+                <Button onClick={loadMore} color='orange' loading={values.loading}>Загрузить еще рестораны</Button>
+            )
+        )
+    };
 
     const eachRestaurants = () => (
         <React.Fragment>
@@ -100,25 +108,24 @@ const Home = ({setCategories, filters, categories, setRestaurants, restaurants})
                 <SliderCategories />
             </div>
             <Grid stackable columns={3} style={{marginTop: '20px'}}>
-                {placeholder ? placeholderRestaurants() : eachRestaurants()}             
+                {values.placeholder ? placeholderRestaurants() : eachRestaurants()}             
             </Grid>
-            <div className='load-more'>
-                <Button onClick={loadMore} color='orange' loading={loading}>Загрузить еще рестораны</Button>
-            </div>
+            <div className='load-more'>{loadMoreButton()}</div>
         </Container>
     )
 };
 
-const mapStateToProps = ({filters, restaurants,category}) => {
+const mapStateToProps = ({filters, restaurants,category, loadMoreData}) => {
     return {
         filters,
         restaurants,
-        categories: category.categories
+        categories: category.categories,
+        loadMoreData
     }
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setCategories, setFilters, setRestaurants} = bindActionCreators(actions, dispatch);
+    const {setCategories, setLoadMoreData, setFilters, setRestaurants, loadMoreRestaurants} = bindActionCreators(actions, dispatch);
 
     return {
         setCategories: categories => {
@@ -130,6 +137,12 @@ const mapDispatchToProps = dispatch => {
         },
         setRestaurants: restaurants => {
             setRestaurants(restaurants)
+        },
+        loadMoreRestaurants: restaurnts => {
+            loadMoreRestaurants(restaurnts);
+        },
+        setLoadMoreData: data => {
+            setLoadMoreData(data);
         }
     }
 }

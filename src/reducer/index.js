@@ -4,7 +4,9 @@ import {
     SET_CURRENT_CATEGORY, 
     SET_RESTAURANTS, 
     SET_RESTAURANT,
-    SET_DISH
+    SET_DISH,
+    LOAD_MORE_RESTAURANTS,
+    SET_LOAD_MORE_DATA
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -19,6 +21,11 @@ const initalState = {
     },
     filters: {
         category: ''
+    },
+    loadMoreData: {
+        skip: 0,
+        limit: 6,
+        size: 0
     },
     restaurants: [],
     restaurant: {},
@@ -51,9 +58,23 @@ const locationReducer = (state = initalState, action) => {
             ...state,
             filters: action.payload
         }
+        case SET_LOAD_MORE_DATA: return {
+            ...state, 
+            loadMoreData: {
+                ...state.loadMoreData,
+                ...action.payload
+            }
+        }
         case SET_RESTAURANTS: return {
             ...state,
             restaurants: action.payload
+        }
+        case LOAD_MORE_RESTAURANTS: return {
+            ...state,
+            restaurants: [
+                ...state.restaurants,
+                ...action.payload
+            ]
         }
         case SET_RESTAURANT: return {
             ...state,
