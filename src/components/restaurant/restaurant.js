@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image, Checkbox} from 'semantic-ui-react';
+import {Container, Icon, Grid, Modal, Button, Image, Radio} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -49,41 +49,59 @@ const settings = {
 // TODO LOADING!!!!
 // TODO LOADING!!!!
 // TODO LOADING!!!!
-const Restaurant = ({match, restaurant, setRestaurant, dish, setDish}) => {
+const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOptions, dishOptions}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const [count, setCount] = useState(0);
     useEffect(() => {
         const id = match.params.id;
-        setLoading(true);
-        getRestaurant(id).then(rest => {
-            if(rest.err) console.log(rest.err);
-            setRestaurant(rest.data);
-            setLoading(false);
-        })
-    }, [match.params.id]);
+        if(!restaurant._id || restaurant._id != id) {
+            setLoading(true);
+            getRestaurant(id).then(rest => {
+                if(rest.err) console.log(rest.err);
+                setRestaurant(rest.data);
+                setLoading(false);
+            })
+        }
+    }, [match.params.id, dishOptions]);
 
     const handleSetActive = (e) => {
         console.log('dsadsa');
     }
 
-    const handleOption = option => e => {
-        console.log(option); 
+    const handleOption = ({category, option}) => e => {
+        setDishOptions(category, option);
+        setCount(2);
     }
+
 
     const ModalProduct = () => (
         <Modal size='small' open={open} onClose={() => setOpen(false)}>
           <Modal.Content>
               <Modal.Description>
+                {JSON.stringify(dishOptions)}
                 <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
                 <h2>{dish.name}</h2>
                 <p>{dish.description}</p>
                 <p>
-                    <h3>Дополнительно</h3>
-                    {dish.options.length > 0 && dish.options.map(option => (
-                        <div style={{paddingTop: '10px'}}>
-                            <Checkbox value={option} onChange={handleOption(option)} label={`${option.name} + ${option.price} сум`} />
-                        </div>
+                    <h3>Дополнительно:</h3>
+                    {dish.options.length > 0 && dish.options.map(({name, options}) => (
+                        <React.Fragment>
+                            <h3>{name}*</h3>
+                        
+                            {options.map(option => (
+                                <div style={{paddingTop: '10px'}}>
+                                    <Radio 
+                                        checked={
+                                            dishOptions[name] && dishOptions[name]._id === option._id
+                                        } 
+                                        value={dishOptions[name] && dishOptions[name].name}
+                                        onChange={handleOption({'category': name, option})} 
+                                        label={`${option.name} + ${option.price} сум`} 
+                                    />
+                                </div>
+                            ))}
+                        </React.Fragment>
                     ))}
                 </p>
                 <p><b>{dish.price} Сум</b></p>
@@ -149,15 +167,16 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish}) => {
     )
 }
 
-const mapStateToProps = ({restaurant, dish}) => {
+const mapStateToProps = ({restaurant, dish, dishOptions}) => {
     return {
         restaurant,
-        dish
+        dish,
+        dishOptions
     }
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setRestaurant, setDish} = bindActionCreators(actions, dispatch);
+    const {setRestaurant, setDish, setDishOptions} = bindActionCreators(actions, dispatch);
 
     return {
         setRestaurant: restaurant => {
@@ -165,6 +184,9 @@ const mapDispatchToProps = dispatch => {
         },
         setDish: dish => {
             setDish(dish);
+        },
+        setDishOptions: (name, option) => {
+            setDishOptions({[name]: option})
         }
     }
 }

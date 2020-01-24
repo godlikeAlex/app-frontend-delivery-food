@@ -6,7 +6,8 @@ import {
     SET_RESTAURANT,
     SET_DISH,
     LOAD_MORE_RESTAURANTS,
-    SET_LOAD_MORE_DATA
+    SET_LOAD_MORE_DATA,
+    SET_DISH_OPTIONS,
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -31,7 +32,8 @@ const initalState = {
     restaurant: {},
     dish: {
         options: []
-    }
+    },
+    dishOptions: {}
 };
 
 const locationReducer = (state = initalState, action) => {
@@ -82,7 +84,15 @@ const locationReducer = (state = initalState, action) => {
         }
         case SET_DISH: return {
             ...state,
-            dish: action.payload
+            dish: action.payload,
+            dishOptions: {}
+        }
+        case SET_DISH_OPTIONS: return {
+            ...state,
+            dishOptions: {
+                ...state.dishOptions,
+                ...action.payload
+            }
         }
         default: return state;
     }

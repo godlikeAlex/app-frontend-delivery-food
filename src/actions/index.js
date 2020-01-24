@@ -7,7 +7,8 @@ import {
     SET_RESTAURANT, 
     SET_DISH,
     LOAD_MORE_RESTAURANTS,
-    SET_LOAD_MORE_DATA
+    SET_LOAD_MORE_DATA,
+    SET_DISH_OPTIONS
 } from '../types';
 
 export const setLocation = payload => {
@@ -41,6 +42,13 @@ export const setFilters = payload => {
 export const setLoadMoreData = payload => {
     return {
         type: SET_LOAD_MORE_DATA,
+        payload
+    }
+};
+
+export const setDishOptions = payload => {
+    return {
+        type: SET_DISH_OPTIONS,
         payload
     }
 };
