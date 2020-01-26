@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
-import {Button, Modal, Header, Icon} from 'semantic-ui-react';
+import {Button, Modal, Header, Icon, Form} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 
-const MapSelector = ({setLocation, location}) => {
+const MapSelector = ({setLocation, location, cart = false}) => {
     const [geo, setGeo] = useState({
         position: [39.65156597430449, 66.97351455688478],
         fullName: 'Пожалуйста укажите на карте где вы находитесь'
@@ -33,7 +33,16 @@ const MapSelector = ({setLocation, location}) => {
     const openModal = isopen => setOpen(isopen);
 
     return (
-        <Modal open={open} onClose={() => openModal(false)} trigger={<li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Выбрать местоположение'}</li>}>
+        <Modal 
+            open={open} 
+            onClose={() => openModal(false)} 
+            trigger={
+                !cart ?
+                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Выбрать местоположение'}</li>
+                :
+                <Form.Input required onClick={() => openModal(true)} className='address_input' label='Адрес доставки' value={location.address} />
+            }
+        >
             <Modal.Header>Выберите свое местоположение</Modal.Header>
             <Modal.Content >
             <Map onclick={handleClickMap} style={{width: '100%', height: '500px'}} center={position} zoom={13}>

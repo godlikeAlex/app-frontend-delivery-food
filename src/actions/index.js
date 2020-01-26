@@ -8,7 +8,12 @@ import {
     SET_DISH,
     LOAD_MORE_RESTAURANTS,
     SET_LOAD_MORE_DATA,
-    SET_DISH_OPTIONS
+    SET_DISH_OPTIONS,
+    SET_TOTAL_PRICE,
+    ADD_TO_CART,
+    INC_QUANTITY,
+    DEC_QUANTITY,
+    DELETE_FOOD
 } from '../types';
 
 export const setLocation = payload => {
@@ -81,3 +86,38 @@ export const setDish = payload => {
         payload
     }
 };
+
+export const setPrice = payload => {
+    return {
+        type: SET_TOTAL_PRICE,
+        payload
+    }
+}
+
+export const addToCart = payload => {
+    return {
+        type: ADD_TO_CART,
+        payload
+    }
+}
+
+export const addQuantity = payload => {
+    return {
+        type: INC_QUANTITY,
+        payload
+    }
+}
+
+export const decQuantity = payload => {
+    return {
+        type: DEC_QUANTITY,
+        payload
+    }
+}
+
+export const deleteFood = payload => {
+    return {
+        type: DELETE_FOOD,
+        payload
+    }
+}

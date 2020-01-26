@@ -9,3 +9,7 @@ export const SET_DISH = 'SET_DISH';
 export const LOAD_MORE_RESTAURANTS = 'LOAD_MORE_RESTAURANTS';
 export const SET_LOAD_MORE_DATA = 'SET_LOAD_MORE_DATA';
 export const SET_DISH_OPTIONS = 'SET_DISH_OPTIONS';
+export const SET_TOTAL_PRICE = 'SET_TOTAL_PRICE';
+export const INC_QUANTITY = 'INC_QUANTITY';
+export const DEC_QUANTITY = 'DEC_QUANTITY';
+export const DELETE_FOOD = 'DELETE_FOOD';

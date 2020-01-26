@@ -33,6 +33,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                 }
             })
         }
+        // @TODO LOAD ALL RESTAURANTS FROM REDUX IF IS EXISTS.
         loadFiltredResults(skip, limit, filters);
     }, [filters]);
 

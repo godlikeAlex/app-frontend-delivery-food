@@ -4,7 +4,20 @@
     padding: 5px 0px;
     border-bottom: 1px solid #ececec;
     background: white;
+    transition: .3s;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+    top: 0;
 }
+
+.animateIn{
+    transform: translateY(0px);
+  }
+  
+  .animateOut{
+    transform: translateY(-100%);
+  }
 
 .menu-items {
     display: flex;
@@ -51,3 +64,7 @@
 .right-menu li:hover {
     color: rgb(255, 102, 0);
 }
+.cart a {
+    color: black;
+}
+

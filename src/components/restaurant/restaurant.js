@@ -9,6 +9,8 @@ import Slider from 'react-slick';
 import {linkMenuItemImage} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
+import {addFoodToCart} from '../core/lsCart';
+
 const settings = {
     dots: false,
     infinite: false,
@@ -49,37 +51,57 @@ const settings = {
 // TODO LOADING!!!!
 // TODO LOADING!!!!
 // TODO LOADING!!!!
-const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOptions, dishOptions}) => {
+const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [count, setCount] = useState(0);
+
     useEffect(() => {
         const id = match.params.id;
-        if(!restaurant._id || restaurant._id != id) {
+        if(!restaurant._id || restaurant._id !== id) {
             setLoading(true);
             getRestaurant(id).then(rest => {
                 if(rest.err) console.log(rest.err);
                 setRestaurant(rest.data);
                 setLoading(false);
             })
+        } else {
+            const calculatedPriceOptions = Object.values(dishOptions).reduce((prev, next) => {
+                return prev + parseInt(next.price)
+            }, 0);
+            setPrice(dish.price + calculatedPriceOptions);
         }
+
     }, [match.params.id, dishOptions]);
 
     const handleSetActive = (e) => {
         console.log('dsadsa');
     }
 
-    const handleOption = ({category, option}) => e => {
+    const handleOption = ({category, option}) => (e, {value}) => {
         setDishOptions(category, option);
-        setCount(2);
-    }
+    };
+
+    const addToCart = () => {
+        const food = {
+            _id: dish._id,
+            uid: Math.floor(Math.random(25) * 9999),
+            name: dish.name,
+            quantity: 1,
+            restaurant: dish.restaurant,
+            options: dishOptions,
+            price: dish.totalPrice,
+            total: dish.totalPrice
+        }
+        setOpen(false);
+        addFoodToCart(food);
+        appendToCart(food);
+    };
 
 
     const ModalProduct = () => (
         <Modal size='small' open={open} onClose={() => setOpen(false)}>
           <Modal.Content>
               <Modal.Description>
-                {JSON.stringify(dishOptions)}
                 <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
                 <h2>{dish.name}</h2>
                 <p>{dish.description}</p>
@@ -95,7 +117,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
                                         checked={
                                             dishOptions[name] && dishOptions[name]._id === option._id
                                         } 
-                                        value={dishOptions[name] && dishOptions[name].name}
+                                        value={option.price}
                                         onChange={handleOption({'category': name, option})} 
                                         label={`${option.name} + ${option.price} сум`} 
                                     />
@@ -105,7 +127,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
                     ))}
                 </p>
                 <p><b>{dish.price} Сум</b></p>
-                <Button color='orange' style={{width: '100%'}}>Добавить в корзину на {dish.price} СУМ</Button>
+                <Button onClick={addToCart} disabled={Object.values(dishOptions).length !== dish.options.length} color='orange' style={{width: '100%'}}>Добавить в корзину на {dish.totalPrice} СУМ</Button>
             </Modal.Description>
           </Modal.Content>
         </Modal>
@@ -176,7 +198,7 @@ const mapStateToProps = ({restaurant, dish, dishOptions}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setRestaurant, setDish, setDishOptions} = bindActionCreators(actions, dispatch);
+    const {setRestaurant, setDish, setDishOptions, setPrice, addToCart} = bindActionCreators(actions, dispatch);
 
     return {
         setRestaurant: restaurant => {
@@ -187,6 +209,12 @@ const mapDispatchToProps = dispatch => {
         },
         setDishOptions: (name, option) => {
             setDishOptions({[name]: option})
+        },
+        setPrice: price => {
+            setPrice(price);
+        },
+        appendToCart: item => {
+            addToCart(item);
         }
     }
 }

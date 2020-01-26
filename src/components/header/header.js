@@ -1,11 +1,11 @@
-import React from 'react';
-import {Container, Icon} from 'semantic-ui-react';
+import React, {useEffect, useState} from 'react';
+import {Container} from 'semantic-ui-react';
 import {MapSelector} from '../location';
 import './header.css';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const Header = () => {
-
+const Header = ({cart}) => {
     return (
         <nav className='menu'>
             <Container >
@@ -15,8 +15,12 @@ const Header = () => {
                         <MapSelector />
                         <li>Войти</li>
                         <li className='cart'>
-                            Корзина 
-                            <div className='cart-counter'>1</div>
+                            <Link to='/cart'>
+                                Корзина 
+                                {cart.totalItems > 0 && (
+                                    <div className='cart-counter'>{cart.totalItems}</div>
+                                )}
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -25,4 +29,10 @@ const Header = () => {
     )
 };
 
-export default Header;
+const mapStateToProps = ({cart}) => {
+    return {
+        cart
+    }
+}
+
+export default connect(mapStateToProps)(Header);

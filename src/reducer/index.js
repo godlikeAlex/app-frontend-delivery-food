@@ -1,4 +1,5 @@
 import {
+    ADD_TO_CART,
     SET_LOCATION, 
     SET_CATEGORIES, 
     SET_CURRENT_CATEGORY, 
@@ -8,6 +9,10 @@ import {
     LOAD_MORE_RESTAURANTS,
     SET_LOAD_MORE_DATA,
     SET_DISH_OPTIONS,
+    SET_TOTAL_PRICE,
+    INC_QUANTITY,
+    DEC_QUANTITY,
+    DELETE_FOOD
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -31,9 +36,97 @@ const initalState = {
     restaurants: [],
     restaurant: {},
     dish: {
-        options: []
+        options: [],
+        price: 0,
+        totalPrice: 0
     },
-    dishOptions: {}
+    dishOptions: {},
+    cart: JSON.parse(localStorage.getItem('cart')) || {
+        items: [],
+        totalPrice: 0,
+        total: 0,
+        totalItems: 0
+    }
+};
+
+const giveTotal = (arr) => {
+    return arr.reduce((prev, next) => {
+        return prev + next.total
+    }, 0);
+}
+
+const updateCartItems = (cartItems, item, idx) => {
+
+    if (item.count === 0) {
+      return [
+        ...cartItems.slice(0, idx),
+        ...cartItems.slice(idx + 1)
+      ];
+    }
+  
+    if (idx === -1) {
+      return [
+        ...cartItems,
+        item
+      ];
+    }
+
+    const newArray = [...cartItems.slice(0, idx), item,...cartItems.slice(idx + 1)];
+    const total = giveTotal(newArray);
+  
+    return [
+        newArray,
+        total
+    ];
+  };
+
+const updateCartItem = (item, quantity) => {
+    if(item.quantity <= 1 && quantity === -1) {
+        item.quantity = 2;
+    }
+    quantity = item.quantity+quantity
+    return {
+        ...item,
+        quantity,
+        total: item.price * quantity
+    }
+}
+
+const updateOrder = (state, id, quantity) => {
+    const {cart: {items}} = state;
+    const item = items.find(({uid}) => uid === id);
+    const itemIndex = items.findIndex(({uid}) => uid === id);
+
+    const newItem = updateCartItem(item, quantity);
+
+    const [updatedItems, total] = updateCartItems(items, newItem, itemIndex);
+    return {
+        ...state,
+        cart: {
+            ...state.cart,
+            items: updatedItems,
+            total
+        }
+    };   
+}
+
+const deleteFood = (state, id) => {
+    const {cart: {items}} = state;
+    const itemIndex = items.findIndex(({uid}) => uid === id);
+    const newArr = items;
+    newArr.splice(itemIndex, 1);
+
+    const total = giveTotal(newArr);
+
+    return {
+        ...state,
+        cart: {
+            ...state.cart,
+            items: newArr,
+            total,
+            totalItems: newArr.length
+        }
+    }
 };
 
 const locationReducer = (state = initalState, action) => {
@@ -80,12 +173,27 @@ const locationReducer = (state = initalState, action) => {
         }
         case SET_RESTAURANT: return {
             ...state,
-            restaurant: action.payload
+            restaurant: action.payload,
+            loadMoreData: {
+                skip: 0,
+                limit: 6,
+                size: 0
+            }
         }
         case SET_DISH: return {
             ...state,
-            dish: action.payload,
+            dish: {
+                ...action.payload,
+                totalPrice: action.payload.price
+            },
             dishOptions: {}
+        }
+        case SET_TOTAL_PRICE: return {
+            ...state, 
+            dish: {
+                ...state.dish,
+                totalPrice: action.payload
+            }
         }
         case SET_DISH_OPTIONS: return {
             ...state,
@@ -94,6 +202,17 @@ const locationReducer = (state = initalState, action) => {
                 ...action.payload
             }
         }
+        case ADD_TO_CART: return {
+            ...state,
+            cart: {
+                items: [...state.cart.items, action.payload],
+                totalItems: state.cart.totalItems + 1,
+                total:  giveTotal([...state.cart.items, action.payload])
+            }
+        }
+        case INC_QUANTITY: return updateOrder(state, action.payload, 1)
+        case DEC_QUANTITY: return updateOrder(state, action.payload, -1)
+        case DELETE_FOOD: return deleteFood(state, action.payload)
         default: return state;
     }
 };

@@ -1,0 +1,37 @@
+.cart-item-content {
+    margin-left: 50px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 15px;
+}
+
+.cart-item-content p {
+    width: 100%
+}
+
+.controll-items {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.order_name {
+    font-weight: 700;
+}
+
+.order_price {
+    font-weight: 700;
+}
+
+.order_options {
+    color: #969696
+}
+
+button a {
+    color: white;
+}
+
+button a:hover {
+    color: white;
+}
