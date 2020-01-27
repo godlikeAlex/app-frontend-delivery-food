@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image, Radio} from 'semantic-ui-react';
+import React, {useEffect, useState, useRef} from 'react';
+import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader, Header} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 import Moto from './moto.svg';
 import Slider from 'react-slick';
-import {linkMenuItemImage} from '../core/restaurantImg';
+import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import {RestaurantHeaderPlaceHolder} from '../placeholders';
 
 import {addFoodToCart} from '../core/lsCart';
 
@@ -22,8 +23,8 @@ const settings = {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 6,
+          slidesToScroll: 6,
           infinite: true,
           dots: false
         }
@@ -48,30 +49,34 @@ const settings = {
 
 // TODO LOADING!!!!
 // TODO LOADING!!!!
-// TODO LOADING!!!!
-// TODO LOADING!!!!
-// TODO LOADING!!!!
 const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const categoryMenu = useRef();
     useEffect(() => {
         const id = match.params.id;
         if(!restaurant._id || restaurant._id !== id) {
-            setLoading(true);
             getRestaurant(id).then(rest => {
                 if(rest.err) console.log(rest.err);
-                setRestaurant(rest.data);
                 setLoading(false);
+                setRestaurant(rest.data);
             })
         } else {
             const calculatedPriceOptions = Object.values(dishOptions).reduce((prev, next) => {
                 return prev + parseInt(next.price)
             }, 0);
             setPrice(dish.price + calculatedPriceOptions);
+            setLoading(false);
         }
-
+        window.addEventListener('scroll', handleScroll);
     }, [match.params.id, dishOptions]);
+
+    const handleScroll = e => {
+        const curPos = window.scrollY;
+        const categoryMenuPossition = categoryMenu.current.getBoundingClientRect();
+        console.log(categoryMenuPossition)
+
+    }
 
     const handleSetActive = (e) => {
         console.log('dsadsa');
@@ -138,9 +143,17 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
         setOpen(true);
     }
 
+    if(loading) {
+        return (
+            <Dimmer active inverted>
+                <Loader inverted>Загрузка...</Loader>
+            </Dimmer>
+        )
+    }
+
     return (
         <React.Fragment>
-            <div className='head-restaurant'>
+            <div className='head-restaurant' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
                 <Container  style={{position: 'relative', height: '100%'}}>
                     <div className='centered-head-restaurant'>
                         <Link style={{color: 'white'}} to='/'><Icon name='angle left' /> Назад</Link>
@@ -152,21 +165,19 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
                     </div>
                 </Container>
             </div>
-            <div className='restaurant-menu'>
-                <Container>
+            <div className='restaurant-menu' ref={categoryMenu}>
                     <Slider 
                         {...settings}
                     >
                         {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                            <Link to={menuItemCategory._id} spy={true} smooth={true} offset={50} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
+                            <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={50} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
                         ))}
                     </Slider>
-                </Container>
             </div>
             <Container>
                 {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
                     <Element name={menuItemCategory._id} className='category-menu-section'>
-                        <h2>{menuItemCategory.name}</h2>
+                        <h2 className='section-category-name'>{menuItemCategory.name}</h2>
                         <Grid stackable columns={3}>
                             {menuItemCategory.items && menuItemCategory.items.map((item, i) => (
                                 <Grid.Column key={i}>

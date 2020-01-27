@@ -7,6 +7,7 @@ import {getFilteredProducts, getAllCategories} from '../core/API.js';
 import {linkImageRestaurant} from '../core/restaurantImg';
 import SliderCategories from '../restaurant/sliderCategories';
 import {Link} from 'react-router-dom';
+import Search from '../search';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -103,7 +104,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
         <Container>
             <div className='section-name-flex'>
                 <Header as='h2' style={{margin: '0px', fontSize: '35px'}}>Рестораны</Header>
-                <Input style={{width: '255px'}} icon='search' placeholder='Найти ресторан...' />
+                <Search style={{width: '255px'}} />
             </div>
             <div >
                 <SliderCategories />

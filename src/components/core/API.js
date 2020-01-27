@@ -16,6 +16,15 @@ export const getRestaurant = (id) => {
     }).catch(err => console.log(err));
 };
 
+export const searchRestaurant = name => {
+    return fetch(`${API}/restaurant/search?search=${name}`, {method: 'GET'}).then(data => {
+        return data.json()
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}
+
 export const getFilteredProducts = (skip, limit, filters = {}) => {
     const data = {skip, limit, filters};
 
