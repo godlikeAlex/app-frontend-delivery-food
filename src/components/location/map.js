@@ -38,7 +38,7 @@ const MapSelector = ({setLocation, location, cart = false}) => {
             onClose={() => openModal(false)} 
             trigger={
                 !cart ?
-                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Выбрать местоположение'}</li>
+                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
                 :
                 <Form.Input required onClick={() => openModal(true)} className='address_input' label='Адрес доставки' value={location.address} />
             }
