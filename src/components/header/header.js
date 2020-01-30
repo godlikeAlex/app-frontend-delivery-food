@@ -19,7 +19,12 @@ const Header = ({cart}) => {
             <div onClick={closeMenu} className={open ? 'right-menu show-menu' : 'right-menu'}>
                 <div className={open ? 'menu-content menu-content-active' : 'menu-content'} >
                     <ul className='list-menu-right'>
+                        <h2 style={{paddingLeft: '20px'}}>Меню</h2>
+                        <li>
+                            <Link to='/'>Главная</Link>
+                        </li>
                         <MapSelector onClick={() => setOpen(false)} />
+
                         <li>
                             <Link onClick={() => setOpen(false)} to='/cart'>
                             <Icon  name='cart' /> Корзина 
@@ -43,7 +48,7 @@ const Header = ({cart}) => {
                     <span className='right-menu-button only-phone'>
                         <Icon name='bars' onClick={() => setOpen(true)} />
                     </span>
-                    <ul className='right-menu only-pc'>
+                    <ul className='right-menu-items only-pc'>
                         <MapSelector />
                         <li>Войти</li>
                         <li className='cart'>

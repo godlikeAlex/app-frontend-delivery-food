@@ -25,7 +25,7 @@
     justify-content: space-between;
 }
 
-.right-menu {
+.right-menu-items {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -33,7 +33,7 @@
     justify-content: space-between;
 }
 
-.right-menu li {
+.right-menu-items li {
     padding: 0px 15px;
     font-weight: 500;
     font-family: 'Open Sans', sans-serif;
@@ -56,12 +56,12 @@
     position: relative;
 }
 
-.right-menu li {
+.right-menu-items li {
     cursor: pointer;
     transition: 0.3s;
 }
 
-.right-menu li:hover {
+.right-menu-items li:hover {
     color: rgb(255, 102, 0);
 }
 .cart a {
@@ -118,9 +118,17 @@
 }
 
 .list-menu-right  li {
-    font-size: 16px;
+    font-size: 14px;
     border-bottom: 1px solid #f3f3f3;
     padding: 10px 20px;
+}
+
+.list-menu-right  li a {
+    color: #333;
+}
+
+.list-menu-right  li a:hover {
+    color: #333;
 }
 
 @media only screen and (max-width: 600px) {

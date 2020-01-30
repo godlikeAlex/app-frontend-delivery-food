@@ -53,6 +53,8 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const categoryMenu = useRef();
+    let classesCategoryMenu;
+
     useEffect(() => {
         const id = match.params.id;
         if(!restaurant._id || restaurant._id !== id) {
@@ -73,8 +75,16 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
 
     const handleScroll = e => {
         const curPos = window.scrollY;
+        const menuHeight = 43;
         const categoryMenuPossition = categoryMenu.current.getBoundingClientRect();
-        console.log(categoryMenuPossition)
+        console.log(categoryMenuPossition.top, curPos)
+        // TODO WORK WITH SCROLL on component mount save position
+        if(categoryMenuPossition.top < 43) {
+            categoryMenu.current.classList.add('active-rest-menu');
+        } else if(categoryMenuPossition.top > 43) {
+            categoryMenu.current.classList.remove('active-rest-menu');
+            console.log(false);
+        }
 
     }
 

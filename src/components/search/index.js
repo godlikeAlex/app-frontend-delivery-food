@@ -9,7 +9,6 @@ const Search = ({style = {}, history}) => {
 
     const handleSearch = e => {
         setSearch(e.target.value);
-        console.log('leb');
 
         searchRestaurant(search).then(data => {
             if(data.err) {
@@ -32,6 +31,7 @@ const Search = ({style = {}, history}) => {
             placeholder='Поиск рестаранов'
             noResultsMessage='Рестораны не найдены. 🙁'
             fluid
+            className='search-restaurant-input'
             search
             selection
             onLabelClick={onSelect}

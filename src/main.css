@@ -28,5 +28,14 @@ h1, h2, h3, h4, h5, h6 {
     .ui.very.relaxed.grid.container {
       width: calc( 1127px  +  5rem ) !important;
     }
+}
+
+@media only screen and (max-width: 600px) {
+  .search-restaurant-input {
+    width: 100% !important;
+    margin-top: 20px;
   }
+}
+
+  
   
