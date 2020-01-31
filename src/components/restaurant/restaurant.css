@@ -22,7 +22,7 @@
 
 .restaurant-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0px 6px 16px #b8b8bb;
+    box-shadow: 0px 6px 15px #b8b8bb87;
 }
 
 .restaurant-image {
@@ -49,7 +49,7 @@
 
 .restaurant-name {
     font-weight: 700;
-    font-size: 25px;
+    font-size: 23px;
     color: #333;
 }
 
@@ -67,18 +67,18 @@
     align-items: center;
 }
 
-.categories {
+.restaurant-item .categories {
     color: #7b7b7b;
     font-size: 13px;
     padding-top: 5px;
 }
 
-.category-dot {
+.rest-category-item {
     position: relative;
     padding-left: 15px;
 }
 
-.category-dot::before {
+.rest-category-item::before {
     content: '';
     width: 5px;
     height: 5px;
@@ -87,7 +87,15 @@
     border-radius: 50%;
     top: 50%;
     transform: translate(0%, -50%);
-    left: 5px;
+    left: 5%;
+}
+
+.rest-category-item:first-child {
+    padding-left: 0px;
+}
+
+.rest-category-item:first-child::before {
+    display: none;
 }
 
 .main-info-restaurant {

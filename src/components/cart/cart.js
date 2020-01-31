@@ -112,7 +112,7 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood}) => {
                             {cart.items.map((item, i) => (
                                 <Grid key={i}>
                                     <Grid.Column width={4}>
-                                        <img src={linkMenuItemImage(item._id)} />
+                                        <img className='cart-img' alt={item.name} src={linkMenuItemImage(item._id)} />
                                     </Grid.Column>
                                     <Grid.Column width={8}>
                                         <p className='order_name'>{item.name}</p>

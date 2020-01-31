@@ -34,8 +34,14 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                 }
             })
         }
+
         // @TODO LOAD ALL RESTAURANTS FROM REDUX IF IS EXISTS.
+
         loadFiltredResults(skip, limit, filters);
+
+        return function cleanupLoadMore() {
+            setLoadMoreData({skip: 0, limit: 6, size: 0});
+        }
     }, [filters]);
 
 
@@ -79,10 +85,10 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                         <div className='restaurant-item' key={key}>
                             <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}></div>
                             <div className="main-info-restaurant">
-                                <div className="restaurant-name">{restaurant.name}</div>
+                                <span className="restaurant-name">{restaurant.name}</span>
                                 <div className='categories'>
                                     {restaurant.category.map((category, index) => (
-                                        <span className={index % 2 !== 0 ? 'category-dot' : ''}>{category.name} </span>
+                                        <span className='rest-category-item'>{category.name} </span>
                                     ))}
                                 </div>
                                 {/* <div className="restaurant-time-work"><Icon name='clock outline' />Открыто целый день.</div> */}

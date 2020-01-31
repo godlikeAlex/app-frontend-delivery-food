@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader, Header} from 'semantic-ui-react';
+import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -8,8 +8,7 @@ import Moto from './moto.svg';
 import Slider from 'react-slick';
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
-import {RestaurantHeaderPlaceHolder} from '../placeholders';
-
+import { useToasts } from 'react-toast-notifications'
 import {addFoodToCart} from '../core/lsCart';
 
 const settings = {
@@ -46,14 +45,13 @@ const settings = {
       }
     ]
 };
+let menuCategoryPos = null;
 
-// TODO LOADING!!!!
-// TODO LOADING!!!!
-const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
+const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const categoryMenu = useRef();
-    let classesCategoryMenu;
+    const categoryMenu = useRef(null);
+    const { addToast } = useToasts();
 
     useEffect(() => {
         const id = match.params.id;
@@ -62,28 +60,35 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
                 if(rest.err) console.log(rest.err);
                 setLoading(false);
                 setRestaurant(rest.data);
-            })
+                window.addEventListener('scroll', handleScroll);
+            });
         } else {
             const calculatedPriceOptions = Object.values(dishOptions).reduce((prev, next) => {
                 return prev + parseInt(next.price)
             }, 0);
             setPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
+            window.addEventListener('scroll', handleScroll);
+
         }
-        window.addEventListener('scroll', handleScroll);
+
+        return function cleanup() {
+            window.removeEventListener('scroll', handleScroll);
+        }
+
     }, [match.params.id, dishOptions]);
+
 
     const handleScroll = e => {
         const curPos = window.scrollY;
+        console.log(menuCategoryPos)
         const menuHeight = 43;
         const categoryMenuPossition = categoryMenu.current.getBoundingClientRect();
-        console.log(categoryMenuPossition.top, curPos)
-        // TODO WORK WITH SCROLL on component mount save position
-        if(categoryMenuPossition.top < 43) {
+        menuCategoryPos = menuCategoryPos === null ? curPos+categoryMenuPossition.top : menuCategoryPos;
+        if(curPos+menuHeight > menuCategoryPos) {
             categoryMenu.current.classList.add('active-rest-menu');
-        } else if(categoryMenuPossition.top > 43) {
+        } else if(curPos <= menuCategoryPos) {
             categoryMenu.current.classList.remove('active-rest-menu');
-            console.log(false);
         }
 
     }
@@ -97,6 +102,12 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
     };
 
     const addToCart = () => {
+        if(cart.items[0] && restaurant._id !== cart.items[0].restaurant ) {
+            setOpen(false);
+            addToast('Блюда в корзину можно добавлять одновременно только с одного ресторана.', {appearance: 'error', autoDismiss: true})
+            // addToast(<span>Удалить элементы с корзины</span>, {appearance: 'warning', autoDismiss: true});
+            return;
+        }
         const food = {
             _id: dish._id,
             uid: Math.floor(Math.random(25) * 9999),
@@ -107,14 +118,15 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
             price: dish.totalPrice,
             total: dish.totalPrice
         }
-        setOpen(false);
         addFoodToCart(food);
         appendToCart(food);
+        setOpen(false);
+        addToast(`${food.name} успешно добавлено в корзину.`, {appearance: 'success', autoDismiss: true});
     };
 
 
     const ModalProduct = () => (
-        <Modal size='small' open={open} onClose={() => setOpen(false)}>
+        <Modal size='tiny' closeIcon={true} open={open} onClose={() => setOpen(false)}>
           <Modal.Content>
               <Modal.Description>
                 <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
@@ -210,11 +222,12 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, setDish, setDishOpt
     )
 }
 
-const mapStateToProps = ({restaurant, dish, dishOptions}) => {
+const mapStateToProps = ({restaurant, dish, dishOptions, cart}) => {
     return {
         restaurant,
         dish,
-        dishOptions
+        dishOptions,
+        cart
     }
 };
 
