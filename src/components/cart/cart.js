@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Grid, Button, Segment, Form, Image, Radio } from 'semantic-ui-react';
+import { Container, Grid, Button, Segment, Form, Image, Radio, Message } from 'semantic-ui-react';
 import './style.css';
 import { connect } from 'react-redux';
 import {MapSelector} from '../location';
@@ -8,10 +8,11 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 import empty from './empty.svg'
 import { Link } from 'react-router-dom';
+import {isAuth} from '../profile'
 
 import {updateFoodCart} from '../core/lsCart';
 
-const Cart = ({location, cart, addQuantity, decQuantity, deleteFood}) => {
+const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
     const [inputs, setInputs] = useState({
         home: {
             porch: '',
@@ -154,9 +155,15 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood}) => {
                     </Segment>
                 </Grid.Column>
                 <Grid.Column mobile={16} computer={7}>
-                    <Segment stacked style={{position: 'sticky', top: '25px'}}>
+                    <Segment stacked style={{position: 'sticky', top: '50px'}}>
                         <h2>Итого: {cart.total} Сум</h2>
-                        <Form onSubmit={handleOrder}>
+                        {!isAuth() ? (
+                            <Message warning>
+                                <Message.Header>Что-бы продолжить необходимо войти в систему!</Message.Header>
+                                <p>Войдите в аккаунт и попробуйте снова. <span style={{color: '#4183c4', cursor: 'pointer'}} onClick={() => showLogin(true)}>Вход</span></p>
+                            </Message>
+                        ) : (
+                            <Form onSubmit={handleOrder}>
                             <MapSelector cart={true} />
                             <Form.Group inline >
                                 <label>Где вы находитесь?</label>
@@ -186,6 +193,7 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood}) => {
                             <Form.TextArea name='comments' onChange={handleChange} value={inputs.comments} label='Коментарии к заказу' placeholder='Коментарии к заказу' />
                             <Button disabled={disable} color='orange' fluid>Оформить заказ</Button>
                         </Form>
+                        )}
                     </Segment>
                 </Grid.Column>
             </Grid>
@@ -193,15 +201,16 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood}) => {
     )
 };
 
-const mapStateToProps = ({cart, location}) => {
+const mapStateToProps = ({cart, location, auth}) => {
     return {
         cart,
-        location
+        location,
+        auth
     }
 }
 
 const mapDispatchToProps = displatch => {
-    const {addQuantity, decQuantity, deleteFood} = bindActionCreators(actions, displatch);
+    const {addQuantity, decQuantity, deleteFood, showLogin} = bindActionCreators(actions, displatch);
 
     return {
         addQuantity: (payload) => {
@@ -212,6 +221,9 @@ const mapDispatchToProps = displatch => {
         },
         deleteFood: payload => {
             deleteFood(payload);
+        },
+        showLogin: payload => {
+            showLogin(payload);
         }
     }
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-const API = 'http://localhost:8000/api/v1';
+const API = process.env.REACT_APP_SERVER_API_ALL;
 
 export const linkImageRestaurant = id => (`${API}/photo/restaurant/${id}`)
 export const linkMenuItemImage = id => (`${API}/photo/menu-item/${id}`)

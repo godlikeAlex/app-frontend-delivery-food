@@ -12,7 +12,9 @@ import {
     SET_TOTAL_PRICE,
     INC_QUANTITY,
     DEC_QUANTITY,
-    DELETE_FOOD
+    DELETE_FOOD,
+    SHOW_LOGIN,
+    SET_AUTH
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -46,6 +48,11 @@ const initalState = {
         totalPrice: 0,
         total: 0,
         totalItems: 0
+    },
+    showLogin: false,
+    auth: JSON.parse(localStorage.getItem('auth')) || {
+        token: null,
+        user: null
     }
 };
 
@@ -213,6 +220,14 @@ const locationReducer = (state = initalState, action) => {
         case INC_QUANTITY: return updateOrder(state, action.payload, 1)
         case DEC_QUANTITY: return updateOrder(state, action.payload, -1)
         case DELETE_FOOD: return deleteFood(state, action.payload)
+        case SHOW_LOGIN: return {
+            ...state,
+            showModal: action.payload
+        }
+        case SET_AUTH: return {
+            ...state,
+            auth: action.payload
+        }
         default: return state;
     }
 };

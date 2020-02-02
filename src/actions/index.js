@@ -13,7 +13,9 @@ import {
     ADD_TO_CART,
     INC_QUANTITY,
     DEC_QUANTITY,
-    DELETE_FOOD
+    DELETE_FOOD,
+    SHOW_LOGIN,
+    SET_AUTH
 } from '../types';
 
 export const setLocation = payload => {
@@ -118,6 +120,20 @@ export const decQuantity = payload => {
 export const deleteFood = payload => {
     return {
         type: DELETE_FOOD,
+        payload
+    }
+}
+
+export const showLogin = payload => {
+    return {
+        type: SHOW_LOGIN,
+        payload
+    }
+}
+
+export const setAuth = payload => {
+    return {
+        type: SET_AUTH,
         payload
     }
 }

@@ -8,7 +8,7 @@ import Moto from './moto.svg';
 import Slider from 'react-slick';
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
-import { useToasts } from 'react-toast-notifications'
+import { useToasts } from 'react-toast-notifications';
 import {addFoodToCart} from '../core/lsCart';
 
 const settings = {
@@ -39,8 +39,8 @@ const settings = {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
+          slidesToShow: 5,
+          slidesToScroll: 5
         }
       }
     ]
@@ -192,7 +192,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                         {...settings}
                     >
                         {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                            <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={50} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
+                            <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
                         ))}
                     </Slider>
             </div>

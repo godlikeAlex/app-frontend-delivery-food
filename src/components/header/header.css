@@ -61,9 +61,14 @@
     transition: 0.3s;
 }
 
+.right-menu-items li:hover a {
+    color: rgb(255, 102, 0);
+}
+
 .right-menu-items li:hover {
     color: rgb(255, 102, 0);
 }
+
 .cart a {
     color: black;
 }
@@ -128,7 +133,7 @@
 }
 
 .list-menu-right  li a:hover {
-    color: #333;
+    color: rgb(255, 102, 0);
 }
 
 @media only screen and (max-width: 600px) {

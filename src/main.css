@@ -38,4 +38,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
   
-  
+.slick-next:before {
+  content: '\f105';
+  font-family: Icons; 
+}
+
+.slick-prev:before {
+  content: '\f104';
+  font-family: Icons; 
+}
+
+.slick-prev {
+  left: -14px;
+}
+
+.slick-next {
+  right: -14px
+}

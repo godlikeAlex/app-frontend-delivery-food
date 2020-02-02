@@ -1,18 +1,53 @@
-import React, {useEffect, useState} from 'react';
-import {Container, Icon} from 'semantic-ui-react';
+import React, {useState} from 'react';
+import {Container, Icon, Dropdown} from 'semantic-ui-react';
 import {MapSelector} from '../location';
 import './header.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from '../../actions';
+import { isAuth } from '../profile';
+import { signOut } from '../core/API';
+import { useToasts } from 'react-toast-notifications';
 
-const Header = ({cart}) => {
+const Header = ({cart, showLogin, auth, setAuth}) => {
     const [open, setOpen] = useState(false);
+    const { addToast } = useToasts();
 
     const closeMenu = e => {
         if(e.target.classList.contains('right-menu')) {
             setOpen(false);
         }
     }
+
+    const handleOpen = () => {
+        showLogin(true);
+    }
+
+    const signOutHandle = () => {
+        if(isAuth()) {
+            signOut(isAuth().token).then(data => {
+                localStorage.removeItem('auth');
+                setAuth({
+                    token: null,
+                    user: null
+                });
+                addToast('Вы вышли из аккаунта', {appearance: 'success', autoDismiss: true});
+                setOpen(false);
+            })
+        }
+    }
+
+    const dropDownProfile = () => (
+        <Dropdown text='Профиль'>
+            <Dropdown.Menu>
+                <Dropdown.Item text='Мои заказы' />
+                <Dropdown.Item text='Настройки' />
+                <Dropdown.Item onClick={signOutHandle} text='Выйти' />
+            </Dropdown.Menu>
+        </Dropdown>
+    )
+    
 
     const rightMenuMobile = () => {
         return (
@@ -21,18 +56,32 @@ const Header = ({cart}) => {
                     <ul className='list-menu-right'>
                         <h2 style={{paddingLeft: '20px'}}>Меню</h2>
                         <li>
-                            <Link to='/'>Главная</Link>
+                            <Link to='/'><Icon name='home' /> Главная</Link>
                         </li>
                         <MapSelector onClick={() => setOpen(false)} />
-
+                        {isAuth() && (
+                            <React.Fragment>
+                                <li><Icon name='setting' /> Настройки</li>
+                                <li><Icon name='numbered list' /> Мои Заказы</li>
+                            </React.Fragment>
+                        )}
                         <li>
                             <Link onClick={() => setOpen(false)} to='/cart'>
-                            <Icon  name='cart' /> Корзина 
-                                {cart.totalItems > 0 && (
-                                    <div className='cart-counter'>{cart.totalItems}</div>
-                                )}
+                            <Icon  name='cart' />
+                                {cart.totalItems > 0 ? (
+                                    <span>Товаров в корзине {cart.totalItems}</span>
+                                ): 'Корзина'}
                             </Link>
                         </li>
+                        {isAuth() ? (
+                            <li onClick={signOutHandle}>
+                                Выйти
+                            </li>
+                        ) : (
+                            <li onClick={handleOpen}>
+                                Войти
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
@@ -50,7 +99,9 @@ const Header = ({cart}) => {
                     </span>
                     <ul className='right-menu-items only-pc'>
                         <MapSelector />
-                        <li>Войти</li>
+                        <li onClick={handleOpen}>
+                            {isAuth() && auth.token ? dropDownProfile() : 'Войти'}
+                        </li>
                         <li className='cart'>
                             <Link to='/cart'>
                                 Корзина 
@@ -66,10 +117,23 @@ const Header = ({cart}) => {
     )
 };
 
-const mapStateToProps = ({cart}) => {
+const mapStateToProps = ({cart, auth}) => {
     return {
-        cart
+        cart,
+        auth
     }
 }
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => {
+    const {showLogin, setAuth} = bindActionCreators(actions, dispatch);
+    return {
+        showLogin: (open) => {
+            showLogin(open);
+        },
+        setAuth: (auth) => {
+            setAuth(auth);
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

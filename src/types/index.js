@@ -13,3 +13,5 @@ export const SET_TOTAL_PRICE = 'SET_TOTAL_PRICE';
 export const INC_QUANTITY = 'INC_QUANTITY';
 export const DEC_QUANTITY = 'DEC_QUANTITY';
 export const DELETE_FOOD = 'DELETE_FOOD';
+export const SHOW_LOGIN = 'SHOW_LOGIN';
+export const SET_AUTH = 'SET_AUTH';
