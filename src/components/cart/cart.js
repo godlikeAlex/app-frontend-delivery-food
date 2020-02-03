@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Grid, Button, Segment, Form, Image, Radio, Message } from 'semantic-ui-react';
+import { Container, Grid, Button, Segment, Form, Image, Radio, Message, Icon } from 'semantic-ui-react';
 import './style.css';
 import { connect } from 'react-redux';
 import {MapSelector} from '../location';
@@ -107,55 +107,62 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin})
     return (
         <Container style={{marginTop: '25px'}}>
             <Grid>
-                <Grid.Column mobile={16} computer={9}>
-                    <Segment stacked>
+                <Grid.Column mobile={16} computer={10}>
+                    <Segment >
                         <h1>Ваша корзина</h1>
                             {cart.items.map((item, i) => (
-                                <Grid key={i}>
-                                    <Grid.Column width={4}>
+                                <Grid className='cart-item' key={i} >
+                                    <Grid.Column width={3}>
                                         <img className='cart-img' alt={item.name} src={linkMenuItemImage(item._id)} />
                                     </Grid.Column>
-                                    <Grid.Column width={8}>
-                                        <p className='order_name'>{item.name}</p>
+                                    <Grid.Column width={6} className={'center-content-cart'}>
+                                        <div>
+                                                                                    <p className='order_name'>{item.name}</p>
                                         <p className='order_options'>Двойной сыр, 35СМ</p>
-                                        <p className='order_price'>{item.total} Сум</p>
+                                        </div>
+                                        {/* <p className='order_price'>{item.total} Сум</p> */}
                                     </Grid.Column>
-                                    <Grid.Column width={4}>
+                                    <Grid.Column width={3}>
                                     <div className='controll-items'>
-                                    <Button.Group>
-                                        <Button 
-                                            icon='minus' 
+                                        <span 
+                                            className='counter-minus'
                                             onClick={() => {
                                                 updateFoodCart(item.uid, 'dec');
                                                 decQuantity(item.uid);
                                             }} 
-                                        />
-                                        <Button.Or text={item.quantity} />
-                                        <Button 
-                                            icon='plus' 
-                                            positive
+                                        >–</span>
+                                        <div className='counter-quantity'>{item.quantity}</div>
+                                        <span 
+                                            className='counter-plus'
                                             onClick={() => {
                                                 updateFoodCart(item.uid, 'inc');
                                                 addQuantity(item.uid);
                                             }} 
-                                        />
-                                        <Button 
-                                            color='red' 
-                                            icon='trash'
+                                        >+</span>
+                                    </div>
+                                    </Grid.Column>
+                                    <Grid.Column width={3}>
+                                        <div className="price-cart">
+                                            {item.total} 
+                                        </div>
+                                    </Grid.Column>
+                                    <Grid.Column width={1}
+                                        className='delete-item-cart' 
+                                    > 
+                                        <Icon 
+                                            name='close'
                                             onClick={() => {
                                                 updateFoodCart(item.uid);
                                                 deleteFood(item.uid);
                                             }} 
                                         />
-                                    </Button.Group>
-                                    </div>
                                     </Grid.Column>
                                 </Grid>
                             ))}
                     </Segment>
                 </Grid.Column>
-                <Grid.Column mobile={16} computer={7}>
-                    <Segment stacked style={{position: 'sticky', top: '50px'}}>
+                <Grid.Column mobile={16} computer={6}>
+                    <Segment style={{position: 'sticky', top: '50px'}}>
                         <h2>Итого: {cart.total} Сум</h2>
                         {!isAuth() ? (
                             <Message warning>

@@ -13,7 +13,6 @@
 .controll-items {
     display: flex;
     align-items: center;
-    flex-direction: row-reverse;
     height: 100%;
 }
 
@@ -39,4 +38,53 @@ button a:hover {
 
 .cart-img {
     width: 100%;
+}
+
+.center-content-cart {
+    display: flex !important;
+    align-items: center;
+}
+
+.counter-quantity {
+    background: #f5f5f5;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border-radius: 3px;
+}
+
+.counter-plus {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.counter-minus {
+    margin-right: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.price-cart {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 20px;
+    justify-content: center;
+    height: 100%;
+}
+
+.cart-item {
+    border-bottom: 1px solid #eaeaea;
+}
+
+.delete-item-cart {
+    display: flex !important;
+    align-items: center;
+    font-size: 16px;
 }
