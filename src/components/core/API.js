@@ -1,4 +1,4 @@
-const API = process.env.REACT_APP_SERVER_API_ALL;
+const API = process.env.REACT_APP_SERVER_API;
 
 export const getRestaurants = (sortBy) => {
     return fetch(`${API}/all/restaurant?sortBy=${sortBy}&order=desc&limit=6`, {

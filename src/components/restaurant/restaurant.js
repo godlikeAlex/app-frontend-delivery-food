@@ -188,6 +188,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                 </Container>
             </div>
             <div className='restaurant-menu' ref={categoryMenu}>
+                <Container>
                     <Slider 
                         {...settings}
                     >
@@ -195,21 +196,24 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                             <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
                         ))}
                     </Slider>
+                </Container>
             </div>
             <Container>
                 {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
                     <Element name={menuItemCategory._id} className='category-menu-section'>
                         <h2 className='section-category-name'>{menuItemCategory.name}</h2>
-                        <Grid stackable columns={3}>
+                        <Grid stretched stackable columns={3}>
                             {menuItemCategory.items && menuItemCategory.items.map((item, i) => (
                                 <Grid.Column key={i}>
                                     <div className='menu-item' onClick={() => showDetails(item)}>
                                         <div className='menu-item-image' style={{ background: `url(${linkMenuItemImage(item._id)})`}}></div>
-                                        <div className="menu-item-name">{item.name}</div>
-                                        <div className="menu-item-desc">
-                                        {item.description}
+                                        <div className="menu-item-content">
+                                            <div className="menu-item-name"><span>{item.name}</span> <span>{item.price} Сум</span></div>
+                                            <div className="menu-item-desc">
+                                            {item.description}
+                                            </div>
+                                            {/* <div className="menu-item-price">Цена: {item.price} Сум</div> */}
                                         </div>
-                                        <div className="menu-item-price">Цена: {item.price} Сум</div>
                                     </div>
                                 </Grid.Column>
                             ))}
