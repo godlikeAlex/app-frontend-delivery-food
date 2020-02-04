@@ -4,6 +4,7 @@
     align-items: center;
     flex-wrap: wrap;
     font-size: 15px;
+    
 }
 
 .cart-item-content p {
@@ -12,8 +13,10 @@
 
 .controll-items {
     display: flex;
+    font-family: 'Rubik', sans-serif;
     align-items: center;
     height: 100%;
+    justify-content: center;
 }
 
 .order_name {
@@ -61,6 +64,7 @@ button a:hover {
     font-size: 20px;
     font-weight: 700;
     cursor: pointer;
+    color: #ff6500; 
 }
 
 .counter-minus {
@@ -68,23 +72,31 @@ button a:hover {
     font-size: 20px;
     font-weight: 700;
     cursor: pointer;
+    color: #ff6500; 
 }
 
 .price-cart {
     display: flex;
     align-items: center;
-    font-weight: 700;
-    font-size: 20px;
+    font-size: 16px;
     justify-content: center;
     height: 100%;
 }
 
 .cart-item {
     border-bottom: 1px solid #eaeaea;
+    font-family: 'Rubik', sans-serif;
+}
+
+.total-cart {
+    font-family: 'Rubik', sans-serif;
+    font-size: 20px;
+    text-align: right;
 }
 
 .delete-item-cart {
     display: flex !important;
     align-items: center;
+    justify-content: center;
     font-size: 16px;
 }

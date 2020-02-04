@@ -105,107 +105,184 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin})
     }
 
     return (
-        <Container style={{marginTop: '25px'}}>
-            <Grid>
-                <Grid.Column mobile={16} computer={10}>
-                    <Segment >
-                        <h1>Ваша корзина</h1>
-                            {cart.items.map((item, i) => (
-                                <Grid className='cart-item' key={i} >
-                                    <Grid.Column width={3}>
-                                        <img className='cart-img' alt={item.name} src={linkMenuItemImage(item._id)} />
-                                    </Grid.Column>
-                                    <Grid.Column width={6} className={'center-content-cart'}>
-                                        <div>
-                                                                                    <p className='order_name'>{item.name}</p>
-                                        <p className='order_options'>Двойной сыр, 35СМ</p>
-                                        </div>
-                                        {/* <p className='order_price'>{item.total} Сум</p> */}
-                                    </Grid.Column>
-                                    <Grid.Column width={3}>
-                                    <div className='controll-items'>
+        <Container>
+        <Grid centered>
+            <Grid.Column computer={12} mobile={16}>
+                <h1 style={{marginTop: '25px'}}>Корзина</h1>
+                <div style={{marginTop: '25px'}}>
+                    {cart.items.map((item, i) => (
+                        <Grid className='cart-item' key={i} >
+                            <Grid.Column computer={2} mobile={5}>
+                                <img className='cart-img' alt={item.name} src={linkMenuItemImage(item._id)} />
+                            </Grid.Column>
+                            <Grid.Column computer={5} mobile={10}>
+                                <div style={{fontWeight: '500', fontSize: '20px'}}>{item.name}</div>
+                                <div className='order_options'>Двойной сыр, 35СМ</div>
+                            </Grid.Column>
+                            <Grid.Column computer={3} mobile={5}>
+                                <div className='controll-items'>
                                         <span 
-                                            className='counter-minus'
-                                            onClick={() => {
-                                                updateFoodCart(item.uid, 'dec');
-                                                decQuantity(item.uid);
-                                            }} 
-                                        >–</span>
-                                        <div className='counter-quantity'>{item.quantity}</div>
-                                        <span 
-                                            className='counter-plus'
-                                            onClick={() => {
-                                                updateFoodCart(item.uid, 'inc');
-                                                addQuantity(item.uid);
-                                            }} 
-                                        >+</span>
-                                    </div>
-                                    </Grid.Column>
-                                    <Grid.Column width={3}>
-                                        <div className="price-cart">
-                                            {item.total} 
-                                        </div>
-                                    </Grid.Column>
-                                    <Grid.Column width={1}
-                                        className='delete-item-cart' 
-                                    > 
-                                        <Icon 
-                                            name='close'
-                                            onClick={() => {
-                                                updateFoodCart(item.uid);
-                                                deleteFood(item.uid);
-                                            }} 
-                                        />
-                                    </Grid.Column>
-                                </Grid>
-                            ))}
-                    </Segment>
-                </Grid.Column>
-                <Grid.Column mobile={16} computer={6}>
-                    <Segment style={{position: 'sticky', top: '50px'}}>
-                        <h2>Итого: {cart.total} Сум</h2>
-                        {!isAuth() ? (
-                            <Message warning>
-                                <Message.Header>Что-бы продолжить необходимо войти в систему!</Message.Header>
-                                <p>Войдите в аккаунт и попробуйте снова. <span style={{color: '#4183c4', cursor: 'pointer'}} onClick={() => showLogin(true)}>Вход</span></p>
-                            </Message>
-                        ) : (
-                            <Form onSubmit={handleOrder}>
-                            <MapSelector cart={true} />
-                            <Form.Group inline >
-                                <label>Где вы находитесь?</label>
-                                <Form.Field
-                                    control={Radio}
-                                    label='Квартира'
-                                    value='home'
-                                    checked={typeDelivery === 'home'}
-                                    onChange={handleTypeDelivery}
+                                    className='counter-minus'
+                                    onClick={() => {
+                                        updateFoodCart(item.uid, 'dec');
+                                        decQuantity(item.uid);
+                                    }} 
+                                >–</span>
+                                <div className='counter-quantity'>{item.quantity}</div>
+                                <span 
+                                    className='counter-plus'
+                                    onClick={() => {
+                                        updateFoodCart(item.uid, 'inc');
+                                        addQuantity(item.uid);
+                                    }} 
+                                >+</span>
+                            </div>
+                            </Grid.Column>
+                            <Grid.Column computer={4} mobile={6}>
+                                <div className="price-cart">
+                                    {item.total} Сум
+                                </div>
+                            </Grid.Column>
+                            <Grid.Column computer={2} mobile={5}
+                                className='delete-item-cart' 
+                            > 
+                                <Icon 
+                                    name='close'
+                                    onClick={() => {
+                                        updateFoodCart(item.uid);
+                                        deleteFood(item.uid);
+                                    }} 
                                 />
-                                <Form.Field
-                                    control={Radio}
-                                    label='Офис'
-                                    value='office'
-                                    checked={typeDelivery === 'office'}
-                                    onChange={handleTypeDelivery}
-                                />
-                                <Form.Field
-                                    control={Radio}
-                                    label='Другое'
-                                    value='other'
-                                    checked={typeDelivery === 'other'}
-                                    onChange={handleTypeDelivery}
-                                />
-                            </Form.Group>
-                            {detailsAddres()}
-                            <Form.TextArea name='comments' onChange={handleChange} value={inputs.comments} label='Коментарии к заказу' placeholder='Коментарии к заказу' />
-                            <Button disabled={disable} color='orange' fluid>Оформить заказ</Button>
-                        </Form>
-                        )}
-                    </Segment>
-                </Grid.Column>
-            </Grid>
+                            </Grid.Column>
+                        </Grid>        
+                    ))}
+                    <Grid>
+                        <Grid.Column width={16} className='total-cart'>
+                            Сумма заказа: {cart.total} сум
+                        </Grid.Column>
+                        <Grid.Column width={16} className='total-cart'>
+                            Итого: {cart.total + 8000} сум
+                        </Grid.Column>
+                    </Grid>
+                </div>
+            </Grid.Column>
+
+            <Grid.Column  width={6} style={{textAlign: 'center'}}>
+                <Button fluid color='grey'>
+                    Продолжить покупки
+                </Button>
+            </Grid.Column>
+            <Grid.Column width={6} style={{textAlign: 'center'}}>
+                <Button fluid color='orange'>
+                    Оформить заказ
+                </Button>
+            </Grid.Column>
+        </Grid>
         </Container>
     )
+
+    // return (
+    //     <Container style={{marginTop: '25px'}}>
+    //         <Grid>
+    //             <Grid.Column mobile={16} computer={10}>
+    //                 <Segment >
+    //                     <h1>Ваша корзина</h1>
+    //                         {cart.items.map((item, i) => (
+    //                             <Grid className='cart-item' key={i} >
+    //                                 <Grid.Column width={3}>
+    //                                     <img className='cart-img' alt={item.name} src={linkMenuItemImage(item._id)} />
+    //                                 </Grid.Column>
+    //                                 <Grid.Column width={6} className={'center-content-cart'}>
+    //                                     <div>
+    //                                                                                 <p className='order_name'>{item.name}</p>
+    //                                     <p className='order_options'>Двойной сыр, 35СМ</p>
+    //                                     </div>
+    //                                     {/* <p className='order_price'>{item.total} Сум</p> */}
+    //                                 </Grid.Column>
+    //                                 <Grid.Column width={3}>
+    //                                 <div className='controll-items'>
+    //                                     <span 
+    //                                         className='counter-minus'
+    //                                         onClick={() => {
+    //                                             updateFoodCart(item.uid, 'dec');
+    //                                             decQuantity(item.uid);
+    //                                         }} 
+    //                                     >–</span>
+    //                                     <div className='counter-quantity'>{item.quantity}</div>
+    //                                     <span 
+    //                                         className='counter-plus'
+    //                                         onClick={() => {
+    //                                             updateFoodCart(item.uid, 'inc');
+    //                                             addQuantity(item.uid);
+    //                                         }} 
+    //                                     >+</span>
+    //                                 </div>
+    //                                 </Grid.Column>
+    //                                 <Grid.Column width={3}>
+    //                                     <div className="price-cart">
+    //                                         {item.total} 
+    //                                     </div>
+    //                                 </Grid.Column>
+    //                                 <Grid.Column width={1}
+    //                                     className='delete-item-cart' 
+    //                                 > 
+    //                                     <Icon 
+    //                                         name='close'
+    //                                         onClick={() => {
+    //                                             updateFoodCart(item.uid);
+    //                                             deleteFood(item.uid);
+    //                                         }} 
+    //                                     />
+    //                                 </Grid.Column>
+    //                             </Grid>
+    //                         ))}
+    //                 </Segment>
+    //             </Grid.Column>
+    //             <Grid.Column mobile={16} computer={6}>
+    //                 <Segment style={{position: 'sticky', top: '50px'}}>
+    //                     <h2>Итого: {cart.total} Сум</h2>
+    //                     {!isAuth() ? (
+    //                         <Message warning>
+    //                             <Message.Header>Что-бы продолжить необходимо войти в систему!</Message.Header>
+    //                             <p>Войдите в аккаунт и попробуйте снова. <span style={{color: '#4183c4', cursor: 'pointer'}} onClick={() => showLogin(true)}>Вход</span></p>
+    //                         </Message>
+    //                     ) : (
+    //                         <Form onSubmit={handleOrder}>
+    //                         <MapSelector cart={true} />
+    //                         <Form.Group inline >
+    //                             <label>Где вы находитесь?</label>
+    //                             <Form.Field
+    //                                 control={Radio}
+    //                                 label='Квартира'
+    //                                 value='home'
+    //                                 checked={typeDelivery === 'home'}
+    //                                 onChange={handleTypeDelivery}
+    //                             />
+    //                             <Form.Field
+    //                                 control={Radio}
+    //                                 label='Офис'
+    //                                 value='office'
+    //                                 checked={typeDelivery === 'office'}
+    //                                 onChange={handleTypeDelivery}
+    //                             />
+    //                             <Form.Field
+    //                                 control={Radio}
+    //                                 label='Другое'
+    //                                 value='other'
+    //                                 checked={typeDelivery === 'other'}
+    //                                 onChange={handleTypeDelivery}
+    //                             />
+    //                         </Form.Group>
+    //                         {detailsAddres()}
+    //                         <Form.TextArea name='comments' onChange={handleChange} value={inputs.comments} label='Коментарии к заказу' placeholder='Коментарии к заказу' />
+    //                         <Button disabled={disable} color='orange' fluid>Оформить заказ</Button>
+    //                     </Form>
+    //                     )}
+    //                 </Segment>
+    //             </Grid.Column>
+    //         </Grid>
+    //     </Container>
+    // )
 };
 
 const mapStateToProps = ({cart, location, auth}) => {
