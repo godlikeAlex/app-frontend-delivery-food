@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media only screen and (min-width: 1500px) {
     .ui.container {
-      width: 1427px;
+      width: 1327px;
       margin-left: auto !important;
       margin-right: auto !important;
     }
