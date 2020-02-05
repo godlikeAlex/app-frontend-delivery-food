@@ -1,7 +1,10 @@
 export const addFoodToCart = food => {
     let cart = JSON.parse(localStorage.getItem('cart')) || {total: 0, totalItems: 0, items: []};
-    cart.totalItems++
+    cart.totalItems++;
     cart.items.push(food);
+    cart.total = cart.items.reduce((prev, next) => {
+        return prev + next.total
+    }, 0);
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
