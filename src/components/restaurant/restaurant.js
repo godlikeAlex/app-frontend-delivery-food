@@ -10,6 +10,7 @@ import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import { useToasts } from 'react-toast-notifications';
 import {addFoodToCart} from '../core/lsCart';
+import {Link as LinkHref} from 'react-router-dom';
 
 const settings = {
     dots: false,
@@ -178,8 +179,8 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
             <div className='head-restaurant' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
                 <Container  style={{position: 'relative', height: '100%'}}>
                     <div className='centered-head-restaurant'>
-                        <Link style={{color: 'white'}} to='/'><Icon name='angle left' /> Назад</Link>
-                        <h1>{restaurant.name}</h1>
+                        <LinkHref style={{color: 'white'}} to='/'><Icon name='angle left' /> Все рестораны</LinkHref>
+                        <h1 className='restaurant-name-header-item'>{restaurant.name}</h1>
                         <div className='main-info-header-rest'>
                             <span><img src={Moto} alt='Доставка' /> Доставка: {restaurant.delivery_time} мин</span>
                             <span> Заказ от: {restaurant.order_from} Сум</span>

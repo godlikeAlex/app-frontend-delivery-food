@@ -230,6 +230,13 @@
     font-size: 18px;
 }
 
+.restaurant-name-header-item {
+    font-size: 45px;
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
 .menu-item-desc {
     padding-top: 15px;
     color: #848484;
