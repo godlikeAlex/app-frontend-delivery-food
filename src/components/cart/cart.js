@@ -58,7 +58,11 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin})
     }
 
     const handleOrder = (e) => {
-        console.log(e);
+        if(isAuth()) {
+            console.log('okay');
+        } else {
+            showLogin(true)
+        }
     };
 
     const detailsAddres = () => {
@@ -108,7 +112,7 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin})
         <Container>
         <Grid centered>
             <Grid.Column computer={12} mobile={16}>
-                <h1 style={{marginTop: '25px'}}>Корзина</h1>
+                <h1 style={{marginTop: '25px', fontSize: '35px'}}>Корзина</h1>
                 <div style={{marginTop: '25px'}}>
                     {cart.items.map((item, i) => (
                         <Grid className='cart-item' key={i} >
@@ -160,23 +164,31 @@ const Cart = ({location, cart, addQuantity, decQuantity, deleteFood, showLogin})
                         <Grid.Column width={16} className='total-cart'>
                             Сумма заказа: {cart.total} сум
                         </Grid.Column>
-                        <Grid.Column width={16} className='total-cart'>
-                            Итого: {cart.total + 8000} сум
-                        </Grid.Column>
+
                     </Grid>
                 </div>
             </Grid.Column>
-
-            <Grid.Column  width={6} style={{textAlign: 'center'}}>
-                <Button fluid color='grey'>
-                    Продолжить покупки
-                </Button>
-            </Grid.Column>
-            <Grid.Column width={6} style={{textAlign: 'center'}}>
-                <Button fluid color='orange'>
-                    Оформить заказ
-                </Button>
-            </Grid.Column>
+            {!isAuth() ? (
+                <Message warning>
+                    <Message.Header>Что-бы продолжить необходимо войти в систему!</Message.Header>
+                    <p>Войдите в аккаунт и попробуйте снова. <span style={{color: '#4183c4', cursor: 'pointer'}} onClick={() => showLogin(true)}>Вход</span></p>
+                </Message>
+            ) : (
+                <React.Fragment>
+                    <Grid.Column  computer={5} mobile={16} style={{textAlign: 'center'}}>
+                        <Link to={`/restaurant/${cart.items[0].restaurant}`}>
+                            <Button fluid color='grey'>
+                                Продолжить покупки
+                            </Button>
+                        </Link>
+                    </Grid.Column>
+                    <Grid.Column computer={5} mobile={16} style={{textAlign: 'center'}}>
+                        <Button fluid color='orange' disabled={cart.items.length < 0} onClick={handleOrder}>
+                            Оформить заказ
+                        </Button>
+                    </Grid.Column>
+                </React.Fragment>
+            )}
         </Grid>
         </Container>
     )

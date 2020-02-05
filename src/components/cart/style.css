@@ -98,5 +98,6 @@ button a:hover {
     display: flex !important;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     font-size: 16px;
 }
