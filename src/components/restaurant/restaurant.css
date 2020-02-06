@@ -225,9 +225,10 @@
 }
 
 .menu-item-price {
-    font-weight: 700;
-    padding-top: 15px;
+    font-weight: 600;
     font-size: 18px;
+    position: absolute;
+    bottom: 25px;
 }
 
 .restaurant-name-header-item {
@@ -251,17 +252,20 @@
 
 .menu-item-name {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 22px;
     display: flex;
     justify-content: space-between;
 }
 
 .menu-item-content {
     padding-top: 25px;
+    padding-bottom: 25px;
+    position: relative;
+    height: 40%;
 }
 
 .category-menu-section {
-    padding-top: 20px;
+    padding-top: 35px;
 }
 
 .menu-item {
@@ -270,7 +274,9 @@
 }
 
 .category-item-slider {
-    color: black;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .category-item-slider:hover {
@@ -279,8 +285,8 @@
 }
 
 .section-category-name {
-    font-size: 30px;
-    padding-bottom: 20px;
+    font-size: 40px;
+    padding-bottom: 35px;
     margin-bottom: 0;
 }
 
