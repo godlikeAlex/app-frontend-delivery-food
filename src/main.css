@@ -13,6 +13,10 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Open Sans', sans-serif !important;      
 }
 
+h1 {
+  font-size: calc(25px + 1.5vw);
+}
+
 @media only screen and (min-width: 1500px) {
     .ui.container {
       width: 1327px;

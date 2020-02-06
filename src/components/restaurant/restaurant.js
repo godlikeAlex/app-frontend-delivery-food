@@ -6,6 +6,8 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 import Moto from './moto.svg';
 import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import { useToasts } from 'react-toast-notifications';
@@ -16,32 +18,32 @@ const settings = {
     dots: false,
     infinite: false,
     speed: 300,
-    slidesToShow: 6,
-    slidesToScroll: 4,
-    initialSlide: 0,
     responsive: [
+        {
+            breakpoint: 9999,
+            settings: {
+                slidesToShow: 10,
+                slidesToScroll: 10
+            }
+        },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 6,
-          slidesToScroll: 6,
-          infinite: true,
-          dots: false
+          slidesToShow: 8,
+          slidesToScroll: 8
         }
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2
+          variableWidth: true
         }
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 5,
-          slidesToScroll: 5
+            arrows: false,
+            variableWidth: true
         }
       }
     ]
@@ -188,17 +190,17 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                     </div>
                 </Container>
             </div>
-            <div className='restaurant-menu' ref={categoryMenu}>
-                <Container>
-                    <Slider 
-                        {...settings}
-                    >
-                        {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                            <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
-                        ))}
-                    </Slider>
-                </Container>
-            </div>
+                <div className='restaurant-menu' ref={categoryMenu}>
+                    <Container>
+                        <Slider 
+                            {...settings}
+                        >
+                            {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
+                                <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
+                            ))}
+                        </Slider>
+                    </Container>
+                </div>
             <Container>
                 {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
                     <Element name={menuItemCategory._id} className='category-menu-section'>

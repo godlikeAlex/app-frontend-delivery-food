@@ -209,6 +209,7 @@
     height: 35px;
     background: white;
     display: flex;
+    z-index: 1;
     align-items: center;
 }
 
@@ -300,8 +301,20 @@
     position: fixed;
 }
 
+.category-item-slider:focus {
+    outline: none;
+}
+
 @media only screen and (max-width: 767px) {
     .section-category-name {
         padding-left: 1rem !important;
+    }
+
+    .category-item-slider {
+        padding-right: 45px;
+    }
+
+    .menu-item-image {
+        height: 150px;
     }
 }
