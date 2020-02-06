@@ -101,3 +101,40 @@ button a:hover {
     cursor: pointer;
     font-size: 16px;
 }
+
+.space-between-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.target-item {
+    color: #ff6500;
+    cursor: pointer;
+}
+
+.item-check {
+    padding: 5px 0px;
+    font-size: 16px;
+}
+
+.item-check span {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.check-controller {
+    border: 1px solid #dadada;
+    border-bottom: 0;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.confirm-order {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.confirm-order .checkbox{
+    padding-right: 35px;
+}

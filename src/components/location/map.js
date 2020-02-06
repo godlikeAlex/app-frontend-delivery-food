@@ -6,7 +6,7 @@ import {Button, Modal, Header, Icon, Form} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 
-const MapSelector = ({setLocation, location, cart = false}) => {
+const MapSelector = ({setLocation, location, order = false}) => {
     const [geo, setGeo] = useState({
         position: [39.65156597430449, 66.97351455688478],
         fullName: 'Пожалуйста укажите на карте где вы находитесь'
@@ -37,10 +37,10 @@ const MapSelector = ({setLocation, location, cart = false}) => {
             open={open} 
             onClose={() => openModal(false)} 
             trigger={
-                !cart ?
-                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
+                !order ?
+                <li ><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
                 :
-                <Form.Input required onClick={() => openModal(true)} className='address_input' label='Адрес доставки' value={location.address} />
+                <div onClick={() => openModal(true)}className='target-item'>Изменить адрес</div>
             }
         >
             <Modal.Header>Выберите свое местоположение</Modal.Header>
