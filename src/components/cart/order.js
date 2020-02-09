@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import check from './check.svg';
 import MapSelector from '../location/map';
 import { Link } from 'react-router-dom';
+import { sendOrder } from '../core/API';
+import {isAuth} from '../profile'
+
 
 const Order = ({location, cart}) => {
     const [checked, setChecked] = useState(false);
     const [open, setOpen] = useState(false);
-
+    // socket.emit('send order', {location, cart});
     const [inputs, setInputs] = useState({
         home: {
             porch: '',
@@ -80,6 +83,16 @@ const Order = ({location, cart}) => {
         }
     }
 
+    const handleOrder = () => {
+        const orderData = {
+            location,
+            cart
+        }
+        sendOrder(isAuth() && isAuth().token, orderData).then(data => {
+            console.log(data);
+        })
+    }
+
     const modal = () => (
         <Modal size='tiny' open={open} onClose={() => setOpen(false)}>
             <Modal.Content>
@@ -148,7 +161,7 @@ const Order = ({location, cart}) => {
                                 checked={checked}
                                 onChange={() => setChecked(!checked)}
                             /> <div>Я согласен с <span className='target-item'> условиями </span> обработки персональных данных</div></div>
-                        <Button color='orange' disabled={!checked} fluid style={{marginTop: '25px'}}>Оформить заказ</Button>
+                        <Button onClick={handleOrder} color='orange' disabled={!checked} fluid style={{marginTop: '25px'}}>Оформить заказ</Button>
                 </Grid.Column>
             </Grid>
         </Container>
