@@ -38,7 +38,7 @@ const MapSelector = ({setLocation, location, order = false}) => {
             onClose={() => openModal(false)} 
             trigger={
                 !order ?
-                <li ><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
+                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
                 :
                 <div onClick={() => openModal(true)}className='target-item'>Изменить адрес</div>
             }
