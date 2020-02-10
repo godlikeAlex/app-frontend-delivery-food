@@ -39,7 +39,20 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
                             </Grid.Column>
                             <Grid.Column computer={5} mobile={10}>
                                 <div style={{fontWeight: '500', fontSize: '20px'}}>{item.name}</div>
-                                <div className='order_options'>Двойной сыр, 35СМ</div>
+                                <div className='order_options'>
+                                    {Object.keys(item.options).map(option => (
+                                        Array.isArray(item.options[option]) ? (
+                                            <React.Fragment>
+                                                <span>{option}:
+                                                {item.options[option].map(multiOpt => (
+                                                    <span>{multiOpt.name} </span>
+                                                ))};</span>
+                                            </React.Fragment>
+                                        ) : (
+                                            <span>{option}: {item.options[option].name}; </span>
+                                        )
+                                    ))}
+                                </div>
                             </Grid.Column>
                             <Grid.Column computer={3} mobile={5}>
                                 <div className='controll-items'>

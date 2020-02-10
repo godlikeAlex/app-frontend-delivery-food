@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader} from 'semantic-ui-react';
+import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader, Checkbox} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -67,8 +67,18 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
             });
         } else {
             const calculatedPriceOptions = Object.values(dishOptions).reduce((prev, next) => {
-                return prev + parseInt(next.price)
+                if(Array.isArray(next)) {
+                    var multi = next.reduce((p, n) => {
+                        return p + parseInt(n.price)
+                    }, 0);
+
+                    return prev + multi;
+                }  else {
+                    console.log(next);
+                    return prev + parseInt(next.price);
+                }
             }, 0);
+
             setPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
             window.addEventListener('scroll', handleScroll);
@@ -100,8 +110,29 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
         console.log('dsadsa');
     }
 
-    const handleOption = ({category, option}) => (e, {value}) => {
-        setDishOptions(category, option);
+    const handleOption = ({category, option}, multiSelect = false) => (e, {value}) => {
+        if(multiSelect) {
+            const isArr = Array.isArray(dishOptions[category]);
+            
+            if(!isArr) {
+                let newArr = [];
+                newArr.push(option);
+                setDishOptions(category, newArr);
+                return;
+            };
+
+            const existOption = dishOptions[category].findIndex(opt => opt._id === option._id);
+            const newOptions = dishOptions[category];
+            if(existOption !== -1) {
+                newOptions.splice(existOption, 1);
+            } else {
+                newOptions.push(option);
+            }
+
+            setDishOptions(category, newOptions);
+        } else {
+            setDishOptions(category, option);
+        }
     };
 
     const addToCart = () => {
@@ -137,21 +168,35 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                 <p>{dish.description}</p>
                 <p>
                     <h3>Дополнительно:</h3>
-                    {dish.options.length > 0 && dish.options.map(({name, options}) => (
+                    {dish.options.length > 0 && dish.options.map(({name, options, multiSelect = false}) => (
                         <React.Fragment>
-                            <h3>{name}*</h3>
-                        
+                            <h3>{name}</h3>
                             {options.map(option => (
-                                <div style={{paddingTop: '10px'}}>
-                                    <Radio 
+                                multiSelect ? (
+                                    <div style={{paddingTop: '10px'}}>
+                                    <Checkbox 
                                         checked={
-                                            dishOptions[name] && dishOptions[name]._id === option._id
+                                            dishOptions[name] && dishOptions[name].findIndex(opt => opt._id === option._id) != -1 ? true : false
                                         } 
                                         value={option.price}
-                                        onChange={handleOption({'category': name, option})} 
+                                        onChange={handleOption({'category': name, option}, true)} 
                                         label={`${option.name} + ${option.price} сум`} 
                                     />
                                 </div>
+                                ) 
+                                : 
+                                (
+                                    <div style={{paddingTop: '10px'}}>
+                                            <Radio 
+                                                checked={
+                                                    dishOptions[name] && dishOptions[name]._id === option._id
+                                                } 
+                                                value={option.price}
+                                                onChange={handleOption({'category': name, option})} 
+                                                label={`${option.name} + ${option.price} сум`} 
+                                            />
+                                    </div>
+                                )
                             ))}
                         </React.Fragment>
                     ))}
