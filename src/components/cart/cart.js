@@ -15,13 +15,17 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
     if(cart.items.length === 0) {
        return (
         <Container style={{textAlign: 'center', marginTop: '25px'}}>
-            <Image style={{width: '65%', margin: 'auto'}} src={empty} />
-            <h1 >Ваша корзина пуста</h1>
-            <Button color='orange' style={{margin: 'auto'}}>
-                <Link to='/'>
-                    Вернутся к ресторанам
-                </Link>
-            </Button>
+            <Grid centered>
+                <Grid.Column computer={12} mobile={16} style={{textAlign: 'center'}}>
+                    <Image style={{width: '65%', margin: 'auto'}} src={empty} />
+                    <h1 >Ваша корзина пуста</h1>
+                    <Button color='orange' style={{margin: 'auto'}}>
+                        <Link to='/'>
+                            Вернутся к ресторанам
+                        </Link>
+                    </Button>
+                </Grid.Column>
+            </Grid>
         </Container>
         )
     }
