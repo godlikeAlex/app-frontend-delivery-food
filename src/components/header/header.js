@@ -41,7 +41,9 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
     const dropDownProfile = () => (
         <Dropdown text='Профиль'>
             <Dropdown.Menu>
-                <Dropdown.Item text='Мои заказы' />
+                <Dropdown.Item as={Link} to='/my-orders'>
+                        Мои заказы
+                </Dropdown.Item>
                 <Dropdown.Item text='Настройки' />
                 <Dropdown.Item onClick={signOutHandle} text='Выйти' />
             </Dropdown.Menu>
