@@ -14,7 +14,8 @@ import {
     DEC_QUANTITY,
     DELETE_FOOD,
     SHOW_LOGIN,
-    SET_AUTH
+    SET_AUTH,
+    SHOW_SUCCESS
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -53,7 +54,8 @@ const initalState = {
     auth: JSON.parse(localStorage.getItem('auth')) || {
         token: null,
         user: null
-    }
+    },
+    showSuccess: false
 };
 
 const giveTotal = (arr) => {
@@ -227,6 +229,10 @@ const locationReducer = (state = initalState, action) => {
         case SET_AUTH: return {
             ...state,
             auth: action.payload
+        }
+        case SHOW_SUCCESS: return {
+            ...state,
+            showSuccess: true
         }
         default: return state;
     }

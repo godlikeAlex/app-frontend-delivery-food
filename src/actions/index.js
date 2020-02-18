@@ -15,7 +15,8 @@ import {
     DEC_QUANTITY,
     DELETE_FOOD,
     SHOW_LOGIN,
-    SET_AUTH
+    SET_AUTH,
+    SHOW_SUCCESS
 } from '../types';
 
 export const setLocation = payload => {
@@ -134,6 +135,13 @@ export const showLogin = payload => {
 export const setAuth = payload => {
     return {
         type: SET_AUTH,
+        payload
+    }
+}
+
+export const showSuccess = payload => {
+    return {
+        type: SHOW_SUCCESS,
         payload
     }
 }

@@ -15,3 +15,4 @@ export const DEC_QUANTITY = 'DEC_QUANTITY';
 export const DELETE_FOOD = 'DELETE_FOOD';
 export const SHOW_LOGIN = 'SHOW_LOGIN';
 export const SET_AUTH = 'SET_AUTH';
+export const SHOW_SUCCESS = 'SHOW_SUCCESS';
