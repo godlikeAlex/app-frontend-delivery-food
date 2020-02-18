@@ -6,12 +6,13 @@ import MapSelector from '../location/map';
 import { Link } from 'react-router-dom';
 import { sendOrder } from '../core/API';
 import {isAuth} from '../profile'
+import { bindActionCreators } from 'redux';
+import * as actions from '../../actions';
 
-
-const Order = ({location, cart}) => {
+const Order = ({location, cart, history, showSuccess}) => {
     const [checked, setChecked] = useState(false);
     const [open, setOpen] = useState(false);
-    // socket.emit('send order', {location, cart});
+    const [landmark, setLandmark] = useState(undefined);
     const [inputs, setInputs] = useState({
         home: {
             porch: '',
@@ -24,7 +25,8 @@ const Order = ({location, cart}) => {
         },
         other: {
             orient: ''
-        }
+        },
+        comment: null
     });
 
     const [typeDelivery, setTypeDelivery] = useState('home');
@@ -37,22 +39,45 @@ const Order = ({location, cart}) => {
                 break;
             } else {
                 setDisable(false);
-
             }
         }
     }, [inputs, typeDelivery])
 
     const handleChange = e => {
-        setInputs({...inputs,
-            [typeDelivery]: {
-                ...inputs[typeDelivery],
-                [e.target.name]: e.target.value
-            }
-        });
+        if(e.target.name === 'comment') {
+            setInputs({...inputs, comment: e.target.value});
+        } else {
+            setInputs({...inputs,
+                [typeDelivery]: {
+                    ...inputs[typeDelivery],
+                    [e.target.name]: e.target.value
+                }
+            });
+        }
+    }
+
+    const handleSaveAddress = () => {
+        getLandMark();
+        setOpen(false);
     }
 
     const handleTypeDelivery = (e, {value}) => {
         setTypeDelivery(value);
+        setInputs({
+            home: {
+                porch: '',
+                numHome: '',
+                floorNum: ''
+            },
+            office: {
+                officeNum: '',
+                porchOffice: ''
+            },
+            other: {
+                orient: ''
+            },
+            comment: null
+        });
     }
 
     const detailsAddres = () => {
@@ -84,12 +109,22 @@ const Order = ({location, cart}) => {
     }
 
     const handleOrder = () => {
+        console.log(inputs.comment);
         const orderData = {
             location,
-            cart
+            cart,
+            landmark,
+            comment: inputs.comment
         }
         sendOrder(isAuth() && isAuth().token, orderData).then(data => {
-            console.log(data);
+            if(data.err) {
+                console.log(data.err);
+            }
+
+            if(data.ok) {
+                showSuccess(true);
+                history.push('/success');
+            }
         })
     }
 
@@ -122,12 +157,22 @@ const Order = ({location, cart}) => {
                     />
                 </Form.Group>
                 {detailsAddres()}
-                <Form.TextArea name='comments' onChange={handleChange} value={inputs.comments} label='Коментарии к заказу' placeholder='Коментарии к заказу' />
-                <Button disabled={disable} color='orange' fluid>Оформить заказ</Button>
+                <Form.TextArea name='comment' onChange={handleChange} value={inputs.comment} label='Коментарии к заказу' placeholder='Коментарии к заказу' />
+                <Button onClick={handleSaveAddress} disabled={disable} color='orange' fluid>Применить</Button>
             </Form>
             </Modal.Content>
         </Modal>
     )
+
+    const getLandMark = () => {
+        if(inputs.home['porch'].length > 0) {
+            setLandmark(`Подъезд - ${inputs.home['porch']}. Номер кваритры - ${inputs.home['numHome']}. Этаж - ${inputs.home['floorNum']}`);
+        } else if(inputs.office['officeNum'].length > 0) {
+            setLandmark(`Номер кабинета - ${inputs.office['officeNum']}. Этаж - ${inputs.office['porchOffice']}`);
+        } else if(inputs.other['orient'].length > 0) {
+            setLandmark(`Другое. Ориентир - ${inputs.other['orient']}`);
+        }
+    }
 
     return (
         <Container>
@@ -139,7 +184,9 @@ const Order = ({location, cart}) => {
                             <h1>Оформление заказа</h1>
                             <h4>Адрес доставки:</h4>
                             <div className='space-between-item'>{location.address} <MapSelector order={true} /></div>
-                            <div style={{color: '#a5a5a5', fontSize: '12px', marginTop: '5px'}}>Укажите ориентир что-бы мы могли быстрее вас найти</div>
+                            {
+                                <div style={{color: '#a5a5a5', fontSize: '12px', marginTop: '5px'}}>{landmark ? landmark : 'Укажите ориентир что-бы мы могли быстрее вас найти'}</div>
+                            }
                             <div onClick={() => setOpen(true)} className='target-item'>Указать ориентир</div>
                             <h2>К оплате:</h2>
                             {cart.items.map((item, i) => {
@@ -175,4 +222,12 @@ const mapStateToProps = ({cart, location}) => {
     }
 }
 
-export default connect(mapStateToProps)(Order);
+const mapDipatchToProps = displatch => {
+    const {showSuccess} = bindActionCreators(actions, displatch);
+
+    return {
+        showSuccess: show => showSuccess(show)
+    }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(Order);
