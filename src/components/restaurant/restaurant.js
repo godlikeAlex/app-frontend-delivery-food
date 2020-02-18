@@ -9,7 +9,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
-import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { Link, Element } from 'react-scroll'
 import { useToasts } from 'react-toast-notifications';
 import {addFoodToCart} from '../core/lsCart';
 import {Link as LinkHref} from 'react-router-dom';
@@ -89,7 +89,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
             window.removeEventListener('scroll', handleScroll);
         }
 
-    }, [match.params.id, dishOptions]);
+    }, [match.params.id, dishOptions]);  // eslint-disable-line
 
 
     const handleScroll = e => {
@@ -176,7 +176,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                                     <div style={{paddingTop: '10px'}}>
                                     <Checkbox 
                                         checked={
-                                            dishOptions[name] && dishOptions[name].findIndex(opt => opt._id === option._id) != -1 ? true : false
+                                            dishOptions[name] && dishOptions[name].findIndex(opt => opt._id === option._id) !== -1 ? true : false
                                         } 
                                         value={option.price}
                                         onChange={handleOption({'category': name, option}, true)} 

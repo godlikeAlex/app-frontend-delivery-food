@@ -139,7 +139,7 @@ const Order = ({location, cart}) => {
                             <h1>Оформление заказа</h1>
                             <h4>Адрес доставки:</h4>
                             <div className='space-between-item'>{location.address} <MapSelector order={true} /></div>
-                            <div style={{color: '#a5a5a5', fontSize: '12px', marginTop: '5px'}}>Укажите ориентир что-бы мы могли быстрее вас найти 😁</div>
+                            <div style={{color: '#a5a5a5', fontSize: '12px', marginTop: '5px'}}>Укажите ориентир что-бы мы могли быстрее вас найти</div>
                             <div onClick={() => setOpen(true)} className='target-item'>Указать ориентир</div>
                             <h2>К оплате:</h2>
                             {cart.items.map((item, i) => {
@@ -154,7 +154,7 @@ const Order = ({location, cart}) => {
                             <div className='space-between-item item-check'>Итого: <span>{cart.total + 8000} Сум</span></div>
                         </div>
                         <div>
-                            <img style={{width: '100%'}} src={check} />
+                            <img style={{width: '100%'}} alt='check-svg' src={check} />
                         </div>
                         <div className='confirm-order'>
                             <Checkbox

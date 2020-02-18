@@ -95,7 +95,7 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
             {rightMenuMobile()}
             <Container >
                 <div className='menu-items'>
-                    <Link to='/'><img src='https://eda.yandex/assets/logo-2b8cf6236b94ab214aa24b00ce106d16.svg' /></Link>
+                    <Link to='/'><img alt='Логотип' src='https://eda.yandex/assets/logo-2b8cf6236b94ab214aa24b00ce106d16.svg' /></Link>
                     <span className='right-menu-button only-phone'>
                         <Icon name='bars' onClick={() => setOpen(true)} />
                     </span>

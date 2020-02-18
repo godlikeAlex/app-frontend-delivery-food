@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Modal, Form, Grid, Segment, Image, Header, Message } from 'semantic-ui-react'
+import { Button, Modal, Form, Header, Message } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
@@ -139,7 +139,7 @@ const AuthModal = ({open, showLogin, setAuth}) => {
             <div className='login-error'>{error && error}</div>
 
             <Message style={{textAlign: 'center'}}>
-                Первый раз с нами? <a href='#' onClick={() => setView({signIn: false, verify: false, signUp: true})}>Регистрация</a>
+                Первый раз с нами? <span className='target-item' onClick={() => setView({signIn: false, verify: false, signUp: true})}>Регистрация</span>
             </Message>
         </React.Fragment>
     )
@@ -161,7 +161,7 @@ const AuthModal = ({open, showLogin, setAuth}) => {
             <div className='login-error'>{error && error}</div>
 
             <Message style={{textAlign: 'center'}}>
-                Уже есть аккаунт? <a href='#' onClick={() => setView({signIn: true, verify: false, signUp: false})}>Вход</a>
+                Уже есть аккаунт? <span className='target-item' onClick={() => setView({signIn: true, verify: false, signUp: false})}>Вход</span>
             </Message>
         </React.Fragment>
     )

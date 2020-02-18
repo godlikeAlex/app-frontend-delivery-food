@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Container, Header, Input, Grid, Button} from 'semantic-ui-react';
+import {Container, Header, Grid, Button} from 'semantic-ui-react';
 import '../restaurant/restaurant.css';
 import Moto from '../restaurant/moto.svg';
 import {placeholderRestaurants} from '../placeholders';
@@ -42,7 +42,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
         return function cleanupLoadMore() {
             setLoadMoreData({skip: 0, limit: 6, size: 0});
         }
-    }, [filters]);
+    }, [filters]); // eslint-disable-line
 
 
 

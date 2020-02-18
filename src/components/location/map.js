@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
-import {Button, Modal, Header, Icon, Form} from 'semantic-ui-react';
+import {Button, Modal, Header, Icon} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 
