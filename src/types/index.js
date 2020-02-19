@@ -16,3 +16,5 @@ export const DELETE_FOOD = 'DELETE_FOOD';
 export const SHOW_LOGIN = 'SHOW_LOGIN';
 export const SET_AUTH = 'SET_AUTH';
 export const SHOW_SUCCESS = 'SHOW_SUCCESS';
+export const SET_REORDER = 'SET_REORDER';
+export const CLEAR_CART = 'CLEAR_CART';

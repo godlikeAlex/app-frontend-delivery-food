@@ -15,7 +15,9 @@ import {
     DELETE_FOOD,
     SHOW_LOGIN,
     SET_AUTH,
-    SHOW_SUCCESS
+    CLEAR_CART,
+    SHOW_SUCCESS,
+    SET_REORDER
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -55,6 +57,7 @@ const initalState = {
         token: null,
         user: null
     },
+    reOrder: null,
     showSuccess: false
 };
 
@@ -219,6 +222,15 @@ const locationReducer = (state = initalState, action) => {
                 total:  giveTotal([...state.cart.items, action.payload])
             }
         }
+        case CLEAR_CART: return {
+            ...state,
+            cart: {
+                items: [],
+                totalPrice: 0,
+                total: 0,
+                totalItems: 0
+            }
+        }
         case INC_QUANTITY: return updateOrder(state, action.payload, 1)
         case DEC_QUANTITY: return updateOrder(state, action.payload, -1)
         case DELETE_FOOD: return deleteFood(state, action.payload)
@@ -229,6 +241,10 @@ const locationReducer = (state = initalState, action) => {
         case SET_AUTH: return {
             ...state,
             auth: action.payload
+        }
+        case SET_REORDER: return {
+            ...state,
+            reOrder: action.payload
         }
         case SHOW_SUCCESS: return {
             ...state,

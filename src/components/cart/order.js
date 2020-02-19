@@ -9,10 +9,10 @@ import {isAuth} from '../profile'
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 
-const Order = ({location, cart, history, showSuccess}) => {
+const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart}) => {
     const [checked, setChecked] = useState(false);
     const [open, setOpen] = useState(false);
-    const [landmark, setLandmark] = useState(undefined);
+    const [landmark, setLandmark] = useState(reOrder ? reOrder.landmark && reOrder.landmark : undefined);
     const [inputs, setInputs] = useState({
         home: {
             porch: '',
@@ -26,13 +26,21 @@ const Order = ({location, cart, history, showSuccess}) => {
         other: {
             orient: ''
         },
-        comment: null
+        comment: reOrder ? reOrder.comment && reOrder.comment : undefined
     });
 
     const [typeDelivery, setTypeDelivery] = useState('home');
     const [disable, setDisable] = useState(true);
 
     useEffect(() => {
+        if(history.location.pathname === '/checkout') {
+            !reOrder && history.push('/my-orders');
+        }
+    
+        if(history.location.pathname === '/order') {
+            setReOrder(null);
+        }
+
         for(const input in inputs[typeDelivery]) {
             if(inputs[typeDelivery][input].length === 0) {
                 setDisable(true);
@@ -41,7 +49,7 @@ const Order = ({location, cart, history, showSuccess}) => {
                 setDisable(false);
             }
         }
-    }, [inputs, typeDelivery])
+    }, [inputs, typeDelivery, reOrder, history, setReOrder])
 
     const handleChange = e => {
         if(e.target.name === 'comment') {
@@ -109,10 +117,9 @@ const Order = ({location, cart, history, showSuccess}) => {
     }
 
     const handleOrder = () => {
-        console.log(inputs.comment);
         const orderData = {
             location,
-            cart,
+            cart: reOrder ? reOrder: cart,
             landmark,
             comment: inputs.comment
         }
@@ -124,6 +131,7 @@ const Order = ({location, cart, history, showSuccess}) => {
             if(data.ok) {
                 showSuccess(true);
                 history.push('/success');
+                !reOrder && clearCart();
             }
         })
     }
@@ -174,14 +182,27 @@ const Order = ({location, cart, history, showSuccess}) => {
         }
     }
 
+    const renderOrders = (cart) => (
+        cart.items.map((item, i) => {
+            i++
+            return (
+                <div className='space-between-item item-check'>{i}. {item.name} x {item.quantity}: <span>{item.total} Сум</span></div>
+            )
+        })
+    )
+
     return (
         <Container>
             <Grid centered style={{marginTop: '10px'}}>
                 {modal()}
                 <Grid.Column computer={8} mobile={16}>
-                        <Link className='target-item' to='/cart'><Icon name='angle left' /> Корзина</Link>
+                        {reOrder ? (
+                            <Link className='target-item' to='/my-orders'><Icon name='angle left' /> Мои заказы</Link>
+                        ) : (
+                            <Link className='target-item' to='/cart'><Icon name='angle left' /> Корзина</Link>
+                        )}
                         <div className='check-controller'>
-                            <h1>Оформление заказа</h1>
+                            <h1>{reOrder ? 'Повтор заказа' : 'Оформление заказа'}</h1>
                             <h4>Адрес доставки:</h4>
                             <div className='space-between-item'>{location.address} <MapSelector order={true} /></div>
                             {
@@ -189,16 +210,11 @@ const Order = ({location, cart, history, showSuccess}) => {
                             }
                             <div onClick={() => setOpen(true)} className='target-item'>Указать ориентир</div>
                             <h2>К оплате:</h2>
-                            {cart.items.map((item, i) => {
-                                i++
-                                return (
-                                    <div className='space-between-item item-check'>{i}. {item.name} x {item.quantity}: <span>{item.total} Сум</span></div>
-                                )
-                            })}
+                            {renderOrders(reOrder ? reOrder : cart)}
                             <h2>Итого:</h2>
-                            <div className='space-between-item item-check'>Сумма заказа: <span>{cart.total} Сум</span></div>
+                            <div className='space-between-item item-check'>Сумма заказа: <span>{reOrder ? reOrder.total : cart.total} Сум</span></div>
                             <div className='space-between-item item-check'>Сумма доставки: <span>8000 Сум</span></div>
-                            <div className='space-between-item item-check'>Итого: <span>{cart.total + 8000} Сум</span></div>
+                            <div className='space-between-item item-check'>Итого: <span>{reOrder ? reOrder.total : cart.total + 8000} Сум</span></div>
                         </div>
                         <div>
                             <img style={{width: '100%'}} alt='check-svg' src={check} />
@@ -215,18 +231,21 @@ const Order = ({location, cart, history, showSuccess}) => {
     )
 };
 
-const mapStateToProps = ({cart, location}) => {
+const mapStateToProps = ({cart, location, reOrder}) => {
     return {
         cart,
-        location
+        location,
+        reOrder
     }
 }
 
 const mapDipatchToProps = displatch => {
-    const {showSuccess} = bindActionCreators(actions, displatch);
+    const {showSuccess, setReOrder, clearCart} = bindActionCreators(actions, displatch);
 
     return {
-        showSuccess: show => showSuccess(show)
+        showSuccess: show => showSuccess(show),
+        setReOrder: order => setReOrder(order),
+        clearCart: () => clearCart()
     }
 }
 

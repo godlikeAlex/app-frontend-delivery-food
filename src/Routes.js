@@ -18,6 +18,7 @@ const Routes = () => (
             <Route path='/cart' exact component={Cart} />
             <Route path='/success' exact component={Success} />
             <PrivateRoute path='/order' exact component={Order} />
+            <PrivateRoute path='/checkout' exact component={Order} isReOrder={true} />
             <PrivateRoute path='/my-orders' exact component={UserOrders} />
         </Switch>
     </Router>

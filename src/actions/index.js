@@ -16,7 +16,9 @@ import {
     DELETE_FOOD,
     SHOW_LOGIN,
     SET_AUTH,
-    SHOW_SUCCESS
+    SHOW_SUCCESS,
+    SET_REORDER,
+    CLEAR_CART
 } from '../types';
 
 export const setLocation = payload => {
@@ -143,5 +145,18 @@ export const showSuccess = payload => {
     return {
         type: SHOW_SUCCESS,
         payload
+    }
+}
+
+export const setReOrder = payload => {
+    return {
+        type: SET_REORDER,
+        payload
+    }
+}
+
+export const clearCart = () => {
+    return {
+        type: CLEAR_CART
     }
 }
