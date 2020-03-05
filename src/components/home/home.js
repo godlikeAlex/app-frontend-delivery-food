@@ -8,6 +8,7 @@ import {linkImageRestaurant} from '../core/restaurantImg';
 import SliderCategories from '../restaurant/sliderCategories';
 import {Link} from 'react-router-dom';
 import Search from '../search';
+import moment from 'moment';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -76,6 +77,13 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
             )
         )
     };
+    const currentTime= moment();
+
+    const isClosed = (start, end) => {
+        const startTime = moment(start, "HH:mm");
+        const endTime = moment(end, "HH:mm");
+        return !currentTime.isBetween(startTime , endTime);
+    }
 
     const eachRestaurants = () => (
         <React.Fragment>
@@ -83,15 +91,24 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                     <Grid.Column>
                         <Link to={`/restaurant/${restaurant._id}`}>
                         <div className='restaurant-item' key={key}>
-                            <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}></div>
+                            <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
+                                {restaurant.workTime && isClosed(restaurant.workTime.from, restaurant.workTime.to) && (
+                                    <div className="restaurant-closed">
+                                        <div className='restaurant-closed-content'>
+                                            <div>Закрыто.</div>
+                                            <div>Откроется в {restaurant.workTime.from}</div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <div className="main-info-restaurant">
+                                
                                 <span className="restaurant-name">{restaurant.name}</span>
                                 <div className='categories'>
                                     {restaurant.category.map((category, index) => (
                                         <span className='rest-category-item'>{category.name} </span>
                                     ))}
                                 </div>
-                                {/* <div className="restaurant-time-work"><Icon name='clock outline' />Открыто целый день.</div> */}
                                 <div className="restaurant-order-from">
                                     От {restaurant.order_from} Сум
                                     <div className='delivery-time'>

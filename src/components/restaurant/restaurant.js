@@ -136,6 +136,7 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
     };
 
     const addToCart = () => {
+
         if(cart.items[0] && restaurant._id !== cart.items[0].restaurant ) {
             setOpen(false);
             addToast('Блюда в корзину можно добавлять одновременно только с одного ресторана.', {appearance: 'error', autoDismiss: true})
