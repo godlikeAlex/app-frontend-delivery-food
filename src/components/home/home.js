@@ -80,6 +80,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
     const currentTime= moment();
 
     const isClosed = (start, end) => {
+        if(!start || !end) return false;
         const startTime = moment(start, "HH:mm");
         const endTime = moment(end, "HH:mm");
         return !currentTime.isBetween(startTime , endTime);

@@ -13,6 +13,7 @@ import { Link, Element } from 'react-scroll'
 import { useToasts } from 'react-toast-notifications';
 import {addFoodToCart} from '../core/lsCart';
 import {Link as LinkHref} from 'react-router-dom';
+import moment from 'moment';
 
 const settings = {
     dots: false,
@@ -82,7 +83,6 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
             setPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
             window.addEventListener('scroll', handleScroll);
-
         }
 
         return function cleanup() {
@@ -93,6 +93,9 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
 
 
     const handleScroll = e => {
+        if(!restaurant.workTime) {
+            return;
+        }
         const curPos = window.scrollY;
         console.log(menuCategoryPos)
         const menuHeight = 43;
@@ -222,6 +225,22 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
         )
     }
 
+    const currentTime= moment();
+
+    const isOpen = (start, end) => {
+        if(!start && !end) {
+            window.removeEventListener('scroll', handleScroll);
+            return true;
+        }
+        const startTime = moment(start, "HH:mm");
+        const endTime = moment(end, "HH:mm");
+        if(currentTime.isBetween(startTime , endTime)) {
+            window.removeEventListener('scroll', handleScroll);
+            return true;
+        }
+        return false;
+    }
+
     return (
         <React.Fragment>
             <div className='head-restaurant' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
@@ -236,41 +255,51 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
                     </div>
                 </Container>
             </div>
-                <div className='restaurant-menu' ref={categoryMenu}>
+            {restaurant.workTime && isOpen(restaurant.workTime.from, restaurant.workTime.to) ? (
+                <React.Fragment>
+                    <div className='restaurant-menu' ref={categoryMenu}>
+                        <Container>
+                            <Slider 
+                                {...settings}
+                            >
+                                {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
+                                    <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
+                                ))}
+                            </Slider>
+                        </Container>
+                    </div>
                     <Container>
-                        <Slider 
-                            {...settings}
-                        >
-                            {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                                <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
-                            ))}
-                        </Slider>
-                    </Container>
-                </div>
-            <Container>
-                {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                    <Element name={menuItemCategory._id} className='category-menu-section'>
-                        <h2 className='section-category-name'>{menuItemCategory.name}</h2>
-                        <Grid stretched stackable columns={3}>
-                            {menuItemCategory.items && menuItemCategory.items.map((item, i) => (
-                                <Grid.Column key={i}>
-                                    <div className='menu-item' onClick={() => showDetails(item)}>
-                                        <div className='menu-item-image' style={{ background: `url(${linkMenuItemImage(item._id)})`}}></div>
-                                        <div className="menu-item-content">
-                                            <div className="menu-item-name">{item.name}</div>
-                                            <div className="menu-item-desc">
-                                            {item.description}
+                        {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
+                            <Element name={menuItemCategory._id} className='category-menu-section'>
+                                <h2 className='section-category-name'>{menuItemCategory.name}</h2>
+                                <Grid stretched stackable columns={3}>
+                                    {menuItemCategory.items && menuItemCategory.items.map((item, i) => (
+                                        <Grid.Column key={i}>
+                                            <div className='menu-item' onClick={() => showDetails(item)}>
+                                                <div className='menu-item-image' style={{ background: `url(${linkMenuItemImage(item._id)})`}}></div>
+                                                <div className="menu-item-content">
+                                                    <div className="menu-item-name">{item.name}</div>
+                                                    <div className="menu-item-desc">
+                                                    {item.description}
+                                                    </div>
+                                                </div>
+                                                <div className="menu-item-price">Цена: {item.price} Сум</div>
                                             </div>
-                                        </div>
-                                        <div className="menu-item-price">Цена: {item.price} Сум</div>
-                                    </div>
-                                </Grid.Column>
-                            ))}
-                        </Grid>
-                    </Element>
-                ))}
-            </Container>
-            {ModalProduct()}
+                                        </Grid.Column>
+                                    ))}
+                                </Grid>
+                            </Element>
+                        ))}
+                    </Container>
+                    {ModalProduct()}
+                </React.Fragment>
+            ) : (
+                <div style={{textAlign: 'center', marginTop: '60px'}}>
+                    <h2 style={{fontSize: '40px'}}>Ресторан закрыт.</h2>
+                    <h2 style={{color: '#10b569'}}>Откроется в {restaurant.workTime && restaurant.workTime.from}</h2>
+                    <LinkHref to='/'><Icon name='angle left' /> Все рестораны</LinkHref>
+                </div>
+            )}
         </React.Fragment>
     )
 }
