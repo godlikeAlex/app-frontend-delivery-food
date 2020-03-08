@@ -101,10 +101,19 @@
     opacity: 1;
 }
 
+.header-mobile-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    padding-top: 0px;
+    font-size: 20px;
+    align-items: center;
+}
+
 .menu-content {
     position: absolute;
-    width: 60%;
-    right: -60%;
+    width: 100%;
+    right: -100%;
     opacity: 0;
     color: #333;
     background: white;

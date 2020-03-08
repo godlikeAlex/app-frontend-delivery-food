@@ -15,7 +15,7 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
     const { addToast } = useToasts();
 
     const closeMenu = e => {
-        if(e.target.classList.contains('right-menu')) {
+        if(e.target.classList.contains('menu-content-active')) {
             setOpen(false);
         }
     }
@@ -56,15 +56,21 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
             <div onClick={closeMenu} className={open ? 'right-menu show-menu' : 'right-menu'}>
                 <div className={open ? 'menu-content menu-content-active' : 'menu-content'} >
                     <ul className='list-menu-right'>
-                        <h2 style={{paddingLeft: '20px'}}>Меню</h2>
+                        <div class="header-mobile-menu">
+                            <Link to='/'><img alt='Логотип' src='https://eda.yandex/s3/assets/logo-2b8cf6236b94ab214aa24b00ce106d16.svg' /></Link>
+                            <Icon name='close' onClick={() => setOpen(false)} />
+                        </div>
                         <li>
-                            <Link to='/'><Icon name='home' /> Главная</Link>
+                            <Link to='/' onClick={() => setOpen(false)}><Icon name='home' /> Главная</Link>
                         </li>
                         <MapSelector onClick={() => setOpen(false)} />
                         {isAuth() && (
                             <React.Fragment>
-                                <li><Icon name='setting' /> Настройки</li>
-                                <li><Icon name='numbered list' /> Мои Заказы</li>
+                                <li>
+                                    <Link to='/my-orders' onClick={() => setOpen(false)}>
+                                        <Icon name='numbered list' /> Мои Заказы
+                                    </Link>
+                                </li>
                             </React.Fragment>
                         )}
                         <li>
