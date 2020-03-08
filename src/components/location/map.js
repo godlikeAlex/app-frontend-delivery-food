@@ -6,7 +6,7 @@ import {Button, Modal, Header, Icon} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 
-const MapSelector = ({setLocation, location, order = false}) => {
+const MapSelector = ({setLocation, location, order = false, needOrder = false}) => {
     const [geo, setGeo] = useState({
         position: [39.65156597430449, 66.97351455688478],
         fullName: 'Пожалуйста укажите на карте где вы находитесь'
@@ -37,8 +37,10 @@ const MapSelector = ({setLocation, location, order = false}) => {
             open={open} 
             onClose={() => openModal(false)} 
             trigger={
-                !order ?
+                !order && !needOrder ?
                 <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
+                : needOrder ? 
+                <span onClick={() => openModal(true)}className='target-item'>Укажите адрес</span>
                 :
                 <div onClick={() => openModal(true)}className='target-item'>Изменить адрес</div>
             }

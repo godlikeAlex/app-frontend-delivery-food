@@ -131,7 +131,10 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             if(data.ok) {
                 showSuccess(true);
                 history.push('/success');
-                !reOrder && clearCart();
+                if(!reOrder) {
+                    clearCart();
+                    localStorage.removeItem('cart');
+                }
             }
         })
     }
@@ -224,7 +227,12 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
                                 checked={checked}
                                 onChange={() => setChecked(!checked)}
                             /> <div>Я согласен с <span className='target-item'> условиями </span> обработки персональных данных</div></div>
-                        <Button onClick={handleOrder} color='orange' disabled={!checked} fluid style={{marginTop: '25px'}}>Оформить заказ</Button>
+                        {!location.position && (
+                            <div style={{textAlign: 'center', fontWeight: 700, paddingTop: '25px'}}>
+                                Что-бы продолжить заказа пожалуйста укажите <span className="target-item" ><MapSelector needOrder={true} /></span>.
+                            </div>
+                        )}
+                        <Button onClick={handleOrder} color='orange' disabled={location.position && checked ? false : true } fluid style={{marginTop: '25px'}}>Оформить заказ</Button>
                 </Grid.Column>
             </Grid>
         </Container>

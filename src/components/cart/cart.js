@@ -19,10 +19,8 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
                 <Grid.Column computer={12} mobile={16} style={{textAlign: 'center'}}>
                     <Image style={{width: '65%', margin: 'auto'}} src={empty} />
                     <h1 >Ваша корзина пуста</h1>
-                    <Button color='orange' style={{margin: 'auto'}}>
-                        <Link to='/'>
-                            Вернутся к ресторанам
-                        </Link>
+                    <Button color='orange' style={{margin: 'auto'}} as={Link} to="/">
+                        Вернутся к ресторанам
                     </Button>
                 </Grid.Column>
             </Grid>
@@ -110,20 +108,22 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
                 </Message>
             ) : (
                 <React.Fragment>
-                    <Grid.Column  computer={5} mobile={16} style={{textAlign: 'center'}}>
-                        <Link to={`/restaurant/${cart.items[0].restaurant}`}>
-                            <Button fluid color='grey'>
-                                Продолжить покупки
-                            </Button>
-                        </Link>
-                    </Grid.Column>
-                    <Grid.Column computer={5} mobile={16} style={{textAlign: 'center'}}>
+                    <React.Fragment>
+                        <Grid.Column  computer={5} mobile={16} style={{textAlign: 'center'}}>
+                            <Link to={`/restaurant/${cart.items[0].restaurant}`}>
+                                <Button fluid color='grey'>
+                                    Продолжить покупки
+                                </Button>
+                            </Link>
+                        </Grid.Column>
+                        <Grid.Column computer={5} mobile={16} style={{textAlign: 'center'}}>
                         <Link to='/order' >
                             <Button fluid color='orange' disabled={cart.items.length < 0}>
                                 Оформить заказ
                             </Button>
                         </Link>
                     </Grid.Column>
+                    </React.Fragment>
                 </React.Fragment>
             )}
         </Grid>

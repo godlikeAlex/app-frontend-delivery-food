@@ -18,17 +18,13 @@ const Success = ({history, showSuccess}) =>  {
                     <h1 >Спасибо! Ваш заказ принят.</h1>
                     <Grid centered>
                         <Grid.Column computer={5} style={{textAlign: 'center'}}>
-                            <Button color='orange' fluid>
-                                <Link to='/'>
-                                    Главная
-                                </Link>
+                            <Button color='orange' fluid as={Link} to='/'>
+                                Главная
                             </Button>
                         </Grid.Column>
                         <Grid.Column computer={5}  style={{textAlign: 'center'}}>
-                            <Button color='orange' fluid>
-                                <Link to='/my-orders'>
+                            <Button color='orange' fluid as={Link} to='/my-orders'>
                                 Мои заказы
-                                </Link>
                             </Button>
                         </Grid.Column>
                     </Grid>
