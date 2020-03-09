@@ -17,7 +17,8 @@ import {
     SET_AUTH,
     CLEAR_CART,
     SHOW_SUCCESS,
-    SET_REORDER
+    SET_REORDER,
+    CURRENT_RESTAURANT
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -40,6 +41,7 @@ const initalState = {
     },
     restaurants: [],
     restaurant: {},
+    currentRestaurant: JSON.parse(localStorage.getItem('cart')) && JSON.parse(localStorage.getItem('cart'))['restaurant'] ? JSON.parse(localStorage.getItem('cart'))['restaurant'] : null,
     dish: {
         options: [],
         price: 0,
@@ -229,7 +231,12 @@ const locationReducer = (state = initalState, action) => {
                 totalPrice: 0,
                 total: 0,
                 totalItems: 0
-            }
+            },
+            currentRestaurant: null
+        }
+        case CURRENT_RESTAURANT: return {
+            ...state,
+            currentRestaurant: action.payload
         }
         case INC_QUANTITY: return updateOrder(state, action.payload, 1)
         case DEC_QUANTITY: return updateOrder(state, action.payload, -1)

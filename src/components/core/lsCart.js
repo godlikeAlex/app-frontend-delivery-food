@@ -34,3 +34,9 @@ export const updateFoodCart = (id, action) => {
 
     localStorage.setItem('cart', JSON.stringify(cart));
 };
+
+export const storeRestaurnt = restaurant => {
+    let cart = JSON.parse(localStorage.getItem('cart'));
+    cart.restaurant = restaurant;
+    localStorage.setItem('cart', JSON.stringify(cart));
+};

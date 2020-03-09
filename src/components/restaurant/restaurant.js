@@ -11,7 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
 import { Link, Element } from 'react-scroll'
 import { useToasts } from 'react-toast-notifications';
-import {addFoodToCart} from '../core/lsCart';
+import {addFoodToCart, storeRestaurnt} from '../core/lsCart';
 import {Link as LinkHref} from 'react-router-dom';
 import moment from 'moment';
 
@@ -51,7 +51,7 @@ const settings = {
 };
 let menuCategoryPos = null;
 
-const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
+const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const categoryMenu = useRef(null);
@@ -158,6 +158,10 @@ const Restaurant = ({match, restaurant, setRestaurant, dish, cart, setDish, setD
         }
         addFoodToCart(food);
         appendToCart(food);
+        if(cart.items.length === 0) {
+            storeRestaurnt(restaurant);
+            setRestaurntnCurrent(restaurant);
+        };
         setOpen(false);
         addToast(`${food.name} успешно добавлено в корзину.`, {appearance: 'success', autoDismiss: true});
     };
@@ -314,7 +318,7 @@ const mapStateToProps = ({restaurant, dish, dishOptions, cart}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setRestaurant, setDish, setDishOptions, setPrice, addToCart} = bindActionCreators(actions, dispatch);
+    const {setRestaurant, setDish, setRestaurntnCurrent, setDishOptions, setPrice, addToCart} = bindActionCreators(actions, dispatch);
 
     return {
         setRestaurant: restaurant => {
@@ -331,6 +335,9 @@ const mapDispatchToProps = dispatch => {
         },
         appendToCart: item => {
             addToCart(item);
+        },
+        setRestaurntnCurrent: item => {
+            setRestaurntnCurrent(item);
         }
     }
 }

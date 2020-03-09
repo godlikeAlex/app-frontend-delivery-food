@@ -18,7 +18,8 @@ import {
     SET_AUTH,
     SHOW_SUCCESS,
     SET_REORDER,
-    CLEAR_CART
+    CLEAR_CART,
+    CURRENT_RESTAURANT
 } from '../types';
 
 export const setLocation = payload => {
@@ -151,6 +152,13 @@ export const showSuccess = payload => {
 export const setReOrder = payload => {
     return {
         type: SET_REORDER,
+        payload
+    }
+}
+
+export const setRestaurntnCurrent = payload => {
+    return {
+        type: CURRENT_RESTAURANT,
         payload
     }
 }

@@ -11,7 +11,7 @@ import {isAuth} from '../profile'
 
 import {updateFoodCart} from '../core/lsCart';
 
-const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
+const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin, currentRestaurant}) => {
     if(cart.items.length === 0) {
        return (
         <Container style={{textAlign: 'center', marginTop: '25px'}}>
@@ -107,35 +107,46 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin}) => {
                     <p>Войдите в аккаунт и попробуйте снова. <span style={{color: '#4183c4', cursor: 'pointer'}} onClick={() => showLogin(true)}>Вход</span></p>
                 </Message>
             ) : (
-                <React.Fragment>
+                currentRestaurant && cart.total >= parseInt(currentRestaurant.order_from) ?
+                (
                     <React.Fragment>
-                        <Grid.Column  computer={5} mobile={16} style={{textAlign: 'center'}}>
-                            <Link to={`/restaurant/${cart.items[0].restaurant}`}>
-                                <Button fluid color='grey'>
-                                    Продолжить покупки
+                        <React.Fragment>
+                            <Grid.Column  computer={5} mobile={16} style={{textAlign: 'center'}}>
+                                <Link to={`/restaurant/${cart.items[0].restaurant}`}>
+                                    <Button fluid color='grey'>
+                                        Продолжить покупки
+                                    </Button>
+                                </Link>
+                            </Grid.Column>
+                            <Grid.Column computer={5} mobile={16} style={{textAlign: 'center'}}>
+                            <Link to='/order' >
+                                <Button fluid color='orange' disabled={cart.items.length < 0}>
+                                    Оформить заказ
                                 </Button>
                             </Link>
                         </Grid.Column>
-                        <Grid.Column computer={5} mobile={16} style={{textAlign: 'center'}}>
-                        <Link to='/order' >
-                            <Button fluid color='orange' disabled={cart.items.length < 0}>
-                                Оформить заказ
-                            </Button>
-                        </Link>
-                    </Grid.Column>
+                        </React.Fragment>
                     </React.Fragment>
-                </React.Fragment>
+                ) 
+                : 
+                (
+                    <Message warning>
+                        <Message.Header>Минимальный заказ в {currentRestaurant.name} - {currentRestaurant.order_from} Сум</Message.Header>
+                        <p>Что-бы продолжить закупитесь на минимальную сумму - {currentRestaurant.order_from} Сум. Продолжить заказ <Link to={`/restaurant/${currentRestaurant._id}`}>{currentRestaurant.name}</Link></p>
+                    </Message>
+                )
             )}
         </Grid>
         </Container>
     )
 };
 
-const mapStateToProps = ({cart, location, auth}) => {
+const mapStateToProps = ({cart, location, auth, currentRestaurant}) => {
     return {
         cart,
         location,
-        auth
+        auth,
+        currentRestaurant
     }
 }
 
