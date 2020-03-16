@@ -16,38 +16,13 @@ import {Link as LinkHref} from 'react-router-dom';
 import moment from 'moment';
 
 const settings = {
+    className: "slider variable-width",
     dots: false,
     infinite: false,
-    speed: 300,
-    responsive: [
-        {
-            breakpoint: 9999,
-            settings: {
-                slidesToShow: 10,
-                slidesToScroll: 10
-            }
-        },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 8,
-          slidesToScroll: 8
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          variableWidth: true
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-            arrows: false,
-            variableWidth: true
-        }
-      }
-    ]
+    centerMode: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    variableWidth: true
 };
 let menuCategoryPos = null;
 
@@ -93,11 +68,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
 
 
     const handleScroll = e => {
-        if(!restaurant.workTime) {
-            return;
-        }
         const curPos = window.scrollY;
-        console.log(menuCategoryPos)
         const menuHeight = 43;
         const categoryMenuPossition = categoryMenu.current.getBoundingClientRect();
         menuCategoryPos = menuCategoryPos === null ? curPos+categoryMenuPossition.top : menuCategoryPos;
