@@ -286,7 +286,7 @@
 }
 
 .category-menu-section {
-    padding-top: 35px;
+    padding-top: 150px;
 }
 
 .menu-item {
@@ -298,7 +298,11 @@
     color: #333;
     font-size: 16px;
     font-weight: 600;
-    min-width: 200px;
+    padding: 0 40px;
+    margin: 5px 10px;
+    user-select: none;
+    cursor: pointer;
+    border: none;
 }
 
 .category-item-slider:hover {
@@ -338,4 +342,33 @@
     .menu-item-image {
         height: 150px;
     }
+}
+
+.category-item-slider{
+    padding: 0 40px;
+    margin: 5px 10px;
+    user-select: none;
+    cursor: pointer;
+    border: none;
+}
+
+.category-item-slider::selection {
+    background-color: unset;
+}
+.menu-item-wrapper:focus {
+    outline: unset;
+}
+
+.category-item-slider.active {
+    color: rgb(255, 102, 0);
+}
+
+.scroll-menu-arrow {
+padding: 20px;
+cursor: pointer;
+transition: .3s;
+}
+
+.scroll-menu-arrow:hover {
+    color: rgb(255, 102, 0);
 }

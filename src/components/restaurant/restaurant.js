@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 import Moto from './moto.svg';
-import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {linkMenuItemImage, linkImageRestaurant} from '../core/restaurantImg';
@@ -14,23 +13,28 @@ import { useToasts } from 'react-toast-notifications';
 import {addFoodToCart, storeRestaurnt} from '../core/lsCart';
 import {Link as LinkHref} from 'react-router-dom';
 import moment from 'moment';
+import ScrollMenu from 'react-horizontal-scrolling-menu';
 
-const settings = {
-    className: "slider variable-width",
-    dots: false,
-    infinite: false,
-    centerMode: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    variableWidth: true
-};
 let menuCategoryPos = null;
 
 const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(null);
+    const [categoryItems, setCategoryItems] = useState([]);
     const categoryMenu = useRef(null);
     const { addToast } = useToasts();
+
+    const MenuItem = ({text, selected, href}) => {
+        return <Link className={`category-item-slider ${selected ? 'active' : ''}`} to={href} spy={true} smooth={true} offset={-90} duration={1000} >{text}</Link>
+    };
+
+    const Menu = (list, selected) =>
+        list.map(el => {
+        const {name} = el;
+
+        return <MenuItem text={name} key={name} selected={selected} href={el._id} />;
+    });
 
     useEffect(() => {
         const id = match.params.id;
@@ -39,6 +43,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                 if(rest.err) console.log(rest.err);
                 setLoading(false);
                 setRestaurant(rest.data);
+                setCategoryItems(Menu(rest.data.menu_items ? rest.data.menu_items : [], 'item1'));
                 window.addEventListener('scroll', handleScroll);
             });
         } else {
@@ -54,18 +59,18 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                     return prev + parseInt(next.price);
                 }
             }, 0);
-
+            if(categoryItems) setCategoryItems(Menu(restaurant.menu_items ? restaurant.menu_items : [], 'item1'));
             setPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
             window.addEventListener('scroll', handleScroll);
         }
+
 
         return function cleanup() {
             window.removeEventListener('scroll', handleScroll);
         }
 
     }, [match.params.id, dishOptions]);  // eslint-disable-line
-
 
     const handleScroll = e => {
         const curPos = window.scrollY;
@@ -78,10 +83,6 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
             categoryMenu.current.classList.remove('active-rest-menu');
         }
 
-    }
-
-    const handleSetActive = (e) => {
-        console.log('dsadsa');
     }
 
     const handleOption = ({category, option}, multiSelect = false) => (e, {value}) => {
@@ -145,6 +146,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                 <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
                 <h2>{dish.name}</h2>
                 <p>{dish.description}</p>
+                {dish.options.length > 0 && (
                 <p>
                     <h3>Дополнительно:</h3>
                     {dish.options.length > 0 && dish.options.map(({name, options, multiSelect = false}) => (
@@ -179,7 +181,9 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                             ))}
                         </React.Fragment>
                     ))}
-                </p>
+                </p>    
+                )}
+
                 <p><b>{dish.price} Сум</b></p>
                 <Button onClick={addToCart} disabled={Object.values(dishOptions).length !== dish.options.length} color='orange' style={{width: '100%'}}>Добавить в корзину на {dish.totalPrice} СУМ</Button>
             </Modal.Description>
@@ -199,6 +203,17 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
             </Dimmer>
         )
     }
+    const Arrow = ({ name, className }) => {
+        return (
+          <Icon
+            name={name}
+            className={className}
+          />
+        );
+    };
+
+    const ArrowLeft = Arrow({ name: 'angle left', className: 'arrow-prev' });
+    const ArrowRight = Arrow({ name: 'angle right', className: 'arrow-next' });
 
     const currentTime= moment();
 
@@ -234,13 +249,14 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                 <React.Fragment>
                     <div className='restaurant-menu' ref={categoryMenu}>
                         <Container>
-                            <Slider 
-                                {...settings}
-                            >
-                                {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
-                                    <Link className='category-item-slider' to={menuItemCategory._id} spy={true} smooth={true} offset={-90} duration={1000} onClick={() => handleSetActive(menuItemCategory)}>{menuItemCategory.name}</Link>
-                                ))}
-                            </Slider>
+                            <ScrollMenu
+                                data={categoryItems}
+                                arrowLeft={ArrowLeft}
+                                arrowRight={ArrowRight}
+                                alignCenter={false}
+                                selected={selected}
+                                onSelect={key => setSelected(key)}
+                            />
                         </Container>
                     </div>
                     <Container>
