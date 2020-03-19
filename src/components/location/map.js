@@ -13,6 +13,7 @@ const MapSelector = ({setLocation, location, order = false, needOrder = false}) 
     });
     const {position, fullName} = geo;
     const [open, setOpen] = useState(false);
+    const [zoom, setZoom] = useState(13);
 
     const handleClickMap = e => {
         const {lat, lng} = e.latlng;
@@ -35,7 +36,10 @@ const MapSelector = ({setLocation, location, order = false, needOrder = false}) 
     return (
         <Modal 
             open={open} 
-            onClose={() => openModal(false)} 
+            onClose={() => {
+                openModal(false);
+                setZoom(13);
+            }} 
             trigger={
                 !order && !needOrder ?
                 <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
@@ -47,7 +51,7 @@ const MapSelector = ({setLocation, location, order = false, needOrder = false}) 
         >
             <Modal.Header>Выберите свое местоположение</Modal.Header>
             <Modal.Content >
-            <Map onclick={handleClickMap} style={{width: '100%', height: '500px'}} center={position} zoom={13}>
+            <Map minZoom={13} onzoomend={(e) => { setZoom(e.target._zoom) }} onclick={handleClickMap} style={{width: '100%', height: '500px'}} center={position} zoom={zoom}>
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
