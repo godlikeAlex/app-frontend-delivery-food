@@ -259,7 +259,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                             />
                         </Container>
                     </div>
-                    <Container>
+                    <Container style={{paddingBottom: '150px'}}>
                         {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
                             <Element name={menuItemCategory._id} className='category-menu-section'>
                                 <h2 className='section-category-name'>{menuItemCategory.name}</h2>
