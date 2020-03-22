@@ -43,7 +43,10 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                 if(rest.err) console.log(rest.err);
                 setLoading(false);
                 setRestaurant(rest.data);
-                setCategoryItems(Menu(rest.data.menu_items ? rest.data.menu_items : [], 'item1'));
+                let notEmptyCategories = rest.data.menu_items.filter(restaurant => {
+                    return restaurant.items.length > 0;
+                });
+                setCategoryItems(Menu(notEmptyCategories ? notEmptyCategories : [], 'item1'));
                 window.addEventListener('scroll', handleScroll);
             });
         } else {
@@ -261,6 +264,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                     </div>
                     <Container style={{paddingBottom: '150px'}}>
                         {restaurant.menu_items && restaurant.menu_items.map(menuItemCategory => (
+                            menuItemCategory.items.length > 0 &&
                             <Element name={menuItemCategory._id} className='category-menu-section'>
                                 <h2 className='section-category-name'>{menuItemCategory.name}</h2>
                                 <Grid stretched stackable columns={3}>
