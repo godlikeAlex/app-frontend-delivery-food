@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import { Grid, Container, Checkbox, Button, Icon, Modal, Form, Radio} from 'semantic-ui-react';
+import { Grid, Container, Checkbox, Button, Icon, Modal, Form, Radio, Message} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import check from './check.svg';
 import MapSelector from '../location/map';
 import { Link } from 'react-router-dom';
-import { sendOrder } from '../core/API';
-import {isAuth} from '../profile'
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
+import {registerOrder} from '../core/socket';
 
-const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart}) => {
+const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart, currentRestaurant}) => {
     const [checked, setChecked] = useState(false);
     const [open, setOpen] = useState(false);
+    const [error, setError] = useState(false);
     const [landmark, setLandmark] = useState(reOrder ? reOrder.landmark && reOrder.landmark : undefined);
     const [inputs, setInputs] = useState({
         home: {
@@ -123,12 +123,13 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             landmark,
             comment: inputs.comment
         }
-        sendOrder(isAuth() && isAuth().token, orderData).then(data => {
-            if(data.err) {
-                console.log(data.err);
-            }
 
-            if(data.ok) {
+        const restaurant = reOrder ? reOrder.restaurant : currentRestaurant;
+
+        registerOrder(orderData, restaurant._id, restaurant.name, err => {
+            if(err) {
+                setError(err);
+            } else {
                 showSuccess(true);
                 history.push('/success');
                 if(!reOrder) {
@@ -189,7 +190,7 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
         cart.items.map((item, i) => {
             i++
             return (
-                <div className='space-between-item item-check'>{i}. {item.name} x {item.quantity}: <span>{item.total} Сум</span></div>
+                <div className='space-between-item item-check'>{i}. {item.name} x {item.quantity}: <span>{item.totalPrice} Сум</span></div>
             )
         })
     )
@@ -205,6 +206,10 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
                             <Link className='target-item' to='/cart'><Icon name='angle left' /> Корзина</Link>
                         )}
                         <div className='check-controller'>
+                            {error && <Message negative>
+                                <Message.Header>Ошибка оформления заказа</Message.Header>
+                                <p>{error}</p>
+                            </Message>}
                             <h1>{reOrder ? 'Повтор заказа' : 'Оформление заказа'}</h1>
                             <h4>Адрес доставки:</h4>
                             <div className='space-between-item'>{location.address} <MapSelector order={true} /></div>
@@ -239,11 +244,12 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
     )
 };
 
-const mapStateToProps = ({cart, location, reOrder}) => {
+const mapStateToProps = ({cart, location, reOrder, currentRestaurant}) => {
     return {
         cart,
         location,
-        reOrder
+        reOrder,
+        currentRestaurant
     }
 }
 

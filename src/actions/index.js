@@ -21,6 +21,7 @@ import {
     CLEAR_CART,
     CURRENT_RESTAURANT
 } from '../types';
+import { updateTokenInSocket } from '../components/core/socket';
 
 export const setLocation = payload => {
     return {
@@ -136,6 +137,7 @@ export const showLogin = payload => {
 }
 
 export const setAuth = payload => {
+    updateTokenInSocket(payload.token);
     return {
         type: SET_AUTH,
         payload

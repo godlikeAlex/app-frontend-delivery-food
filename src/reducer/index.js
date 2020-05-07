@@ -65,7 +65,7 @@ const initalState = {
 
 const giveTotal = (arr) => {
     return arr.reduce((prev, next) => {
-        return prev + next.total
+        return prev + next.totalPrice
     }, 0);
 }
 
@@ -102,7 +102,7 @@ const updateCartItem = (item, quantity) => {
     return {
         ...item,
         quantity,
-        total: item.price * quantity
+        totalPrice: item.price * quantity
     }
 }
 

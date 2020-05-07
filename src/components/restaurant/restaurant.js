@@ -129,7 +129,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
             restaurant: dish.restaurant,
             options: dishOptions,
             price: dish.totalPrice,
-            total: dish.totalPrice
+            totalPrice: dish.totalPrice
         }
         addFoodToCart(food);
         appendToCart(food);
