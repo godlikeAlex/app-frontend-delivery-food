@@ -44,7 +44,6 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
                 <Dropdown.Item as={Link} to='/my-orders'>
                         Мои заказы
                 </Dropdown.Item>
-                <Dropdown.Item text='Настройки' />
                 <Dropdown.Item onClick={signOutHandle} text='Выйти' />
             </Dropdown.Menu>
         </Dropdown>
