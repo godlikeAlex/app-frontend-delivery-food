@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Header, Grid, Container, Button, Icon } from 'semantic-ui-react';
+import { Header, Grid, Container, Button, Icon, Loader } from 'semantic-ui-react';
 import './style.css';
 import { getOrders } from '../core/API';
 import { connect } from 'react-redux';
@@ -8,9 +8,11 @@ import 'moment/locale/ru';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 import { Link } from 'react-router-dom';
+import EmptyImg from './empty.svg';
 
 const UserOrders = ({auth, setReOrder, history}) => {
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getOrders(auth.token).then(data => {
@@ -19,6 +21,7 @@ const UserOrders = ({auth, setReOrder, history}) => {
                 return;
             }
             setOrders(data);
+            setLoading(false);
         })
     }, []);  // eslint-disable-line
 
@@ -65,7 +68,14 @@ const UserOrders = ({auth, setReOrder, history}) => {
                 <Header as='h1'>
                     Мои заказы
                 </Header>
-                {renderOrders()}
+                {loading ? <Loader active={loading}  inline='centered' style={{marginTop: 50}}>Загружаем ваши заказы</Loader> : orders.length > 0 ? renderOrders() : (
+                    <div style={{textAlign: 'center'}}>
+                        <img src={EmptyImg} alt='У вас нету заказов.' style={{width: '80%'}} />
+                        <Header as='h2' style={{textAlign: 'center'}}>
+                            У вас нету заказов
+                        </Header>
+                    </div>
+                )}
             </Grid.Column>
         </Grid>
     </Container>
