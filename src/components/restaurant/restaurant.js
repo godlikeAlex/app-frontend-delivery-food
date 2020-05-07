@@ -278,7 +278,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                                                     {item.description}
                                                     </div>
                                                 </div>
-                                                <div className="menu-item-price">Цена: {item.price} Сум</div>
+                                                <div className="menu-item-price">{item.price} Сум</div>
                                             </div>
                                         </Grid.Column>
                                     ))}
