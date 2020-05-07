@@ -43,15 +43,18 @@ const UserOrders = ({auth, setReOrder, history}) => {
                         <div className="logo-order-item">
 
                         </div>
-                        <div>
-                            <Header as='h3' style={{margin: 0}}>{order.restaurant.name}</Header>
+                        <div style={{width: '100%'}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                <Header as='h3' style={{margin: 0}}>{order.restaurant.name}</Header>
+                                <div style={{color: order.status === 5 ? 'green' : 'red'}}>{order.status === 5 ? 'Успешно доставлен' : 'Отказано'}</div>
+                            </div>
                             <div className="date-orders">
                                 <Moment locale="ru" format='LLL'>{order.createdAt}</Moment>
                             </div>
                         </div>
                     </div>
                     {order.cart.items.map((cart, index) => (
-                        <div className='space-between-item item-check' style={{fontSize: '15px'}}>{index+1}. {cart.name} *{cart.quantity}: <span className="price-my-order">{cart.total} Сум</span></div>
+                        <div className='space-between-item item-check' style={{fontSize: '15px'}}>{index+1}. {cart.name} *{cart.quantity}: <span className="price-my-order">{cart.totalPrice} Сум</span></div>
                     ))}
                     <div className='space-between-item item-check' style={{fontSize: '15px'}}>Итого: <span className="price-my-order">{order.cart.total} Сум</span></div>
                     <Button fluid style={{marginTop: '25px'}} onClick={() => hanleReOrder(order)}>Повторить</Button>
