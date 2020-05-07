@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { Header, Grid, Container, Button, Icon } from 'semantic-ui-react';
 import './style.css';
-import { Link } from 'react-scroll';
 import { getOrders } from '../core/API';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import 'moment/locale/ru';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
+import { Link } from 'react-router-dom';
 
 const UserOrders = ({auth, setReOrder, history}) => {
     const [orders, setOrders] = useState([]);
@@ -61,7 +61,7 @@ const UserOrders = ({auth, setReOrder, history}) => {
         <Container style={{textAlign: 'center', marginTop: '25px'}}>
         <Grid centered>
             <Grid.Column computer={8} mobile={16} >
-                <Link className='target-item' to='/cart'><Icon name='angle left' /> Главная</Link>
+                <Link className='target-item' to='/'><Icon name='angle left' /> Главная</Link>
                 <Header as='h1'>
                     Мои заказы
                 </Header>
