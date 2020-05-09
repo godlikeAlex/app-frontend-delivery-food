@@ -49,8 +49,6 @@ const MapSelector = ({setLocation, location, order = false, needOrder = false}) 
                 <div onClick={() => openModal(true)}className='target-item'>Изменить адрес</div>
             }
         >
-            <Modal.Header>Выберите свое местоположение</Modal.Header>
-            <Modal.Content >
             <Map minZoom={13} onzoomend={(e) => { setZoom(e.target._zoom) }} onclick={handleClickMap} style={{width: '100%', height: '500px'}} center={position} zoom={zoom}>
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -66,7 +64,6 @@ const MapSelector = ({setLocation, location, order = false, needOrder = false}) 
             <div className='select-btn'>
                 <Button positive onClick={handleLocation}>Выбрать местоположение</Button>
             </div>
-            </Modal.Content>
         </Modal>
     )
 }

@@ -33,7 +33,9 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                 } else {
                     setCategories(data);
                 }
-            })
+            }).catch(e => {
+                // setError(new Error("Asynchronous error"));
+            });
         }
 
         // @TODO LOAD ALL RESTAURANTS FROM REDUX IF IS EXISTS.

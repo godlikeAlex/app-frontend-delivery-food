@@ -7,13 +7,13 @@ import {AuthModal} from './components/profile';
 function App() {
   return (
     <div className="App">
-        <ToastProvider 
-          placement="bottom-center"
-          autoDismissTimeout={6000}
-        > 
-          <AuthModal />
-          <Routes />
-        </ToastProvider>
+          <ToastProvider 
+            placement="bottom-center"
+            autoDismissTimeout={6000}
+          > 
+              <AuthModal />
+              <Routes />
+          </ToastProvider>
     </div>
   );
 }

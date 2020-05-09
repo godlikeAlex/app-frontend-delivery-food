@@ -1,11 +1,14 @@
+import store from '../../store';
+
 const API = process.env.REACT_APP_SERVER_API;
+
 
 export const getRestaurants = (sortBy) => {
     return fetch(`${API}/all/restaurant?sortBy=${sortBy}&order=desc&limit=6`, {
         method: 'GET'
     }).then(data => {
         return data.json();
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 };
 
 export const getRestaurant = (id) => {
@@ -13,7 +16,7 @@ export const getRestaurant = (id) => {
         method: 'GET'
     }).then(data => {
         return data.json();
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 };
 
 export const searchRestaurant = name => {
@@ -39,13 +42,13 @@ export const getFilteredProducts = (skip, limit, filters = {}) => {
         .then(response => {
             return response.json();
         })
-        .catch(err => console.log(err))
+        .catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 };
 
 export const getAllCategories = () => {
     return fetch(`${API}/categories`).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 };
 
 export const login = (phone) => {
@@ -59,7 +62,7 @@ export const login = (phone) => {
         body: JSON.stringify({phone})
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }
 
 export const createAccount = (name, phone) => {
@@ -73,7 +76,7 @@ export const createAccount = (name, phone) => {
         body: JSON.stringify({name, phone})
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }
 
 
@@ -89,7 +92,7 @@ export const verify = (phone, key) => {
         body: JSON.stringify({phone, key})
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }
 
 export const signOut = (token) => {
@@ -102,7 +105,7 @@ export const signOut = (token) => {
         }
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }
 
 export const sendOrder = (token, data) => {
@@ -116,7 +119,7 @@ export const sendOrder = (token, data) => {
         body: JSON.stringify(data)
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }
 
 export const getOrders = token => {
@@ -129,5 +132,5 @@ export const getOrders = token => {
         }
     }).then(data => {
         return data.json()
-    }).catch(err => console.log(err));
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
 }

@@ -19,13 +19,21 @@ import {
     SHOW_SUCCESS,
     SET_REORDER,
     CLEAR_CART,
-    CURRENT_RESTAURANT
+    CURRENT_RESTAURANT,
+    SET_ERROR
 } from '../types';
 import { updateTokenInSocket } from '../components/core/socket';
 
 export const setLocation = payload => {
     return {
         type: SET_LOCATION,
+        payload
+    }
+}
+
+export const setError = payload => {
+    return {
+        type: SET_ERROR,
         payload
     }
 }

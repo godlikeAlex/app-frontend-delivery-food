@@ -19,3 +19,4 @@ export const SHOW_SUCCESS = 'SHOW_SUCCESS';
 export const SET_REORDER = 'SET_REORDER';
 export const CLEAR_CART = 'CLEAR_CART';
 export const CURRENT_RESTAURANT = 'CURRENT_RESTAURANT';
+export const SET_ERROR = 'SET_ERROR';

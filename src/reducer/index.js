@@ -18,7 +18,8 @@ import {
     CLEAR_CART,
     SHOW_SUCCESS,
     SET_REORDER,
-    CURRENT_RESTAURANT
+    CURRENT_RESTAURANT,
+    SET_ERROR
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -60,7 +61,8 @@ const initalState = {
         user: null
     },
     reOrder: null,
-    showSuccess: false
+    showSuccess: false,
+    hasError: false
 };
 
 const giveTotal = (arr) => {
@@ -148,6 +150,10 @@ const locationReducer = (state = initalState, action) => {
         case SET_LOCATION: return {
             ...state,
             location: action.payload
+        }
+        case SET_ERROR: return {
+            ...state,
+            hasError: action.payload
         }
         case SET_CATEGORIES: return {
             ...state,
