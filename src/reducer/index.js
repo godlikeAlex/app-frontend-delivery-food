@@ -19,7 +19,8 @@ import {
     SHOW_SUCCESS,
     SET_REORDER,
     CURRENT_RESTAURANT,
-    SET_ERROR
+    SET_ERROR,
+    OPEN_LOCATION
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -62,7 +63,8 @@ const initalState = {
     },
     reOrder: null,
     showSuccess: false,
-    hasError: false
+    hasError: false,
+    openLocation: false
 };
 
 const giveTotal = (arr) => {
@@ -150,6 +152,10 @@ const locationReducer = (state = initalState, action) => {
         case SET_LOCATION: return {
             ...state,
             location: action.payload
+        }
+        case OPEN_LOCATION: return {
+            ...state,
+            openLocation: action.payload
         }
         case SET_ERROR: return {
             ...state,

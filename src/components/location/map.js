@@ -1,70 +1,75 @@
-import React, {useState} from 'react';
-import { Map, Marker, TileLayer } from 'react-leaflet';
+import React, {useCallback, useEffect, useState} from 'react';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
-import {Button, Modal, Header, Icon} from 'semantic-ui-react';
+import {Button} from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import markerImg from './pin.png'
+import { YMaps, Map, GeolocationControl } from 'react-yandex-maps';
+let ymaps;
 
-
-const MapSelector = ({setLocation, location, order = false, needOrder = false}) => {
-    const [geo, setGeo] = useState({
-        position: [39.65156597430449, 66.97351455688478],
-        fullName: 'Пожалуйста укажите на карте где вы находитесь'
+const MapSelector = props => {  
+    const [region, setRegion] = useState({
+        center: props.location.position ? props.location.position : {
+            latitude: 39.653173497797304,
+            longitude: 66.97555186226964
+        },
+        zoom: 17
     });
-    const {position, fullName} = geo;
-    const [open, setOpen] = useState(false);
-    const [zoom, setZoom] = useState(13);
 
-    const handleClickMap = e => {
-        const {lat, lng} = e.latlng;
-        fetch(`https://geocode-maps.yandex.ru/1.x/?format=json&apikey=eb6a8eca-b3bf-41c2-b304-b9f5b255d3f1&geocode=${lat}, ${lng}&ll=39.654515, 66.968847&sco=latlong`, {
-            method: 'GET'
-        }).then(response => response.json())
-        .then(result => {
-            setGeo({...geo, fullName: result.response.GeoObjectCollection.featureMember["0"].GeoObject.name, position: [lat, lng], addressLoaded: true});
-        });
+    const [adress, setAdress] = useState(props.location.address ? props.location.address : 'Укажите ваш адресс...');
+    const [disabled, setDisabled] = useState(false);
+
+    useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+
+        return () => {
+            document.removeEventListener("keydown", escFunction, false);
+        };
+    }, []); // eslint-disable-line
+
+    const escFunction = useCallback((event) => {
+        if(event.keyCode === 27) {
+            props.openLocation(false);
+        }
+    }, []); // eslint-disable-line
+
+    const closeMap = (e) => {
+        if(e.target.classList.contains('map-container')) {
+            props.openLocation(false);
+        }
     };
 
-    const handleLocation = () => {
-        setLocation({position, address: fullName});
-        localStorage.setItem('location', JSON.stringify({position, address: fullName}));
-        setOpen(false);
+    const changeLocation = ({originalEvent}) => {
+        ymaps.geocode && ymaps.geocode(originalEvent.newCenter).then(res => {
+            const result = res.geoObjects.get(0).getAddressLine().replace('Узбекистан, Самарканд, ', '');
+            setAdress(result);
+            setDisabled(false);
+            setRegion({zoom: originalEvent.newZoom, center: {latitude: originalEvent.newCenter[0], longitude: originalEvent.newCenter[1]}});
+        })
+    };
+
+    const saveAdress = () => {
+        const selectedPosition = {address: adress, position: region.center}
+        props.setLocation(selectedPosition);
+        localStorage.setItem('location', JSON.stringify(selectedPosition));
+        props.openLocation(false);
     }
 
-    const openModal = isopen => setOpen(isopen);
 
     return (
-        <Modal 
-            open={open} 
-            onClose={() => {
-                openModal(false);
-                setZoom(13);
-            }} 
-            trigger={
-                !order && !needOrder ?
-                <li onClick={() => openModal(true)}><Icon name='map marker alternate'/> {location.address || 'Адрес доставки'}</li>
-                : needOrder ? 
-                <span onClick={() => openModal(true)}className='target-item'>Укажите адрес</span>
-                :
-                <div onClick={() => openModal(true)}className='target-item'>Изменить адрес</div>
-            }
-        >
-            <Map minZoom={13} onzoomend={(e) => { setZoom(e.target._zoom) }} onclick={handleClickMap} style={{width: '100%', height: '500px'}} center={position} zoom={zoom}>
-                <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                />
-
-                <Marker position={position}>
-                </Marker>
-            </Map>
-            <div className='fullname-address'>
-                <Header as='h2'>{fullName}</Header>
-            </div>
-            <div className='select-btn'>
-                <Button positive onClick={handleLocation}>Выбрать местоположение</Button>
-            </div>
-        </Modal>
+        <div className='map-container' style={{display: 'flex', justifyContent: 'center',  height: ' 100%', alignItems: 'center' }} onClick={closeMap}>
+            <YMaps query={{apikey: 'eb6a8eca-b3bf-41c2-b304-b9f5b255d3f1'}}>
+                <Map onActionbegin={() => setDisabled(true)} onBoundschange={changeLocation} modules={['geocode']} onLoad={api => ymaps = api} style={{width: '95%',  height: '650px', background: 'white', borderRadius: '10px', position: 'relative'}} defaultState={{
+                    center: [region.center.latitude, region.center.longitude],
+                    zoom: region.zoom
+                }} >
+                    <div className='address_on_map'>{adress}</div>
+                    <div className='pin'><img style={{width: '100%', userSelect: 'none'}} src={markerImg} alt="маркер" /></div>
+                    <GeolocationControl click={() => console.log('true')} options={{ float: 'left' }} />
+                    <Button className='save_adderess_btn' color='orange' onClick={saveAdress} disabled={disabled}>Сохранить адрес</Button>
+                </Map>
+            </YMaps>
+        </div>
     )
 }
 
@@ -75,12 +80,13 @@ const mapStateProps = ({location}) => {
 }
 
 const mapDispatchToProps = displatch => {
-    const {setLocation} = bindActionCreators(actions, displatch);
+    const {setLocation, openLocation} = bindActionCreators(actions, displatch);
 
     return {
         setLocation: (payload) => {
             setLocation(payload);
-        }
+        },
+        openLocation: payload => openLocation(payload)
     }
 };
 

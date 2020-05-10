@@ -2,13 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { Grid, Container, Checkbox, Button, Icon, Modal, Form, Radio, Message} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import check from './check.svg';
-import MapSelector from '../location/map';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 import {registerOrder} from '../core/socket';
 
-const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart, currentRestaurant}) => {
+const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart, currentRestaurant, openLocation}) => {
     const [checked, setChecked] = useState(false);
     const [open, setOpen] = useState(false);
     const [error, setError] = useState(false);
@@ -50,7 +49,6 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             }
         }
     }, [inputs, typeDelivery, reOrder, history, setReOrder])
-
     const handleChange = e => {
         if(e.target.name === 'comment') {
             setInputs({...inputs, comment: e.target.value});
@@ -123,7 +121,7 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             landmark,
             comment: inputs.comment
         }
-
+        console.log(orderData);
         const restaurant = reOrder ? reOrder.restaurant : currentRestaurant;
 
         registerOrder(orderData, restaurant._id, restaurant.name, err => {
@@ -212,7 +210,7 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
                             </Message>}
                             <h1>{reOrder ? 'Повтор заказа' : 'Оформление заказа'}</h1>
                             <h4>Адрес доставки:</h4>
-                            <div className='space-between-item'>{location.address} <MapSelector order={true} /></div>
+                            <div className='space-between-item'>{location.address || 'Адрес не указан'} <div onClick={() => openLocation(true)}className='target-item'>Изменить адрес</div></div>
                             {
                                 <div style={{color: '#a5a5a5', fontSize: '12px', marginTop: '5px'}}>{landmark ? landmark : 'Укажите ориентир что-бы мы могли быстрее вас найти'}</div>
                             }
@@ -234,7 +232,7 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
                             /> <div>Я согласен с <span className='target-item'> условиями </span> обработки персональных данных</div></div>
                         {!location.position && (
                             <div style={{textAlign: 'center', fontWeight: 700, paddingTop: '25px'}}>
-                                Что-бы продолжить заказа пожалуйста укажите <span className="target-item" ><MapSelector needOrder={true} /></span>.
+                                Что-бы продолжить заказа пожалуйста укажите <span className="target-item" onClick={() => openLocation(true)}>Укажите адрес</span>.
                             </div>
                         )}
                         <Button onClick={handleOrder} color='orange' disabled={location.position && checked ? false : true } fluid style={{marginTop: '25px'}}>Оформить заказ</Button>
@@ -254,12 +252,13 @@ const mapStateToProps = ({cart, location, reOrder, currentRestaurant}) => {
 }
 
 const mapDipatchToProps = displatch => {
-    const {showSuccess, setReOrder, clearCart} = bindActionCreators(actions, displatch);
+    const {showSuccess, setReOrder, clearCart, openLocation} = bindActionCreators(actions, displatch);
 
     return {
         showSuccess: show => showSuccess(show),
         setReOrder: order => setReOrder(order),
-        clearCart: () => clearCart()
+        clearCart: () => clearCart(),
+        openLocation: payload => openLocation(payload),
     }
 }
 

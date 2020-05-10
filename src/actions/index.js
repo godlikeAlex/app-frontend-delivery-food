@@ -20,7 +20,8 @@ import {
     SET_REORDER,
     CLEAR_CART,
     CURRENT_RESTAURANT,
-    SET_ERROR
+    SET_ERROR,
+    OPEN_LOCATION
 } from '../types';
 import { updateTokenInSocket } from '../components/core/socket';
 
@@ -176,5 +177,12 @@ export const setRestaurntnCurrent = payload => {
 export const clearCart = () => {
     return {
         type: CLEAR_CART
+    }
+}
+
+export const openLocation = payload => {
+    return {
+        type: OPEN_LOCATION,
+        payload
     }
 }

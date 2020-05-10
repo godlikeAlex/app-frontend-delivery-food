@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Container, Icon, Dropdown} from 'semantic-ui-react';
-import {MapSelector} from '../location';
 import './header.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -10,7 +9,7 @@ import { isAuth } from '../profile';
 import { signOut } from '../core/API';
 import { useToasts } from 'react-toast-notifications';
 
-const Header = ({cart, showLogin, auth, setAuth}) => {
+const Header = ({cart, showLogin, auth, setAuth, openLocation, location}) => {
     const [open, setOpen] = useState(false);
     const { addToast } = useToasts();
 
@@ -62,7 +61,12 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
                         <li>
                             <Link to='/' onClick={() => setOpen(false)}><Icon name='home' /> Главная</Link>
                         </li>
-                        <MapSelector onClick={() => setOpen(false)} />
+                        <li onClick={() => {
+                             openLocation(true);
+                             setOpen(false);
+                        }}>
+                            <Icon name='map marker alternate'/> {location.address || 'Адрес доставки'} 
+                        </li>
                         {isAuth() && (
                             <React.Fragment>
                                 <li>
@@ -105,7 +109,9 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
                         <Icon name='bars' onClick={() => setOpen(true)} />
                     </span>
                     <ul className='right-menu-items only-pc'>
-                        <MapSelector />
+                        <li className='cart' onClick={() => openLocation(true)}>
+                            <Icon name='map marker alternate'/> {location.address || 'Адрес доставки'} 
+                        </li>
                         <li onClick={handleOpen}>
                             {isAuth() && auth.token ? dropDownProfile() : 'Войти'}
                         </li>
@@ -124,22 +130,25 @@ const Header = ({cart, showLogin, auth, setAuth}) => {
     )
 };
 
-const mapStateToProps = ({cart, auth}) => {
+const mapStateToProps = ({cart, auth, location}) => {
     return {
         cart,
-        auth
+        auth,
+        location
     }
 }
 
 const mapDispatchToProps = dispatch => {
-    const {showLogin, setAuth} = bindActionCreators(actions, dispatch);
+    const {showLogin, setAuth, openLocation} = bindActionCreators(actions, dispatch);
     return {
         showLogin: (open) => {
             showLogin(open);
         },
         setAuth: (auth) => {
             setAuth(auth);
-        }
+        },
+        openLocation: payload => openLocation(payload),
+        
     }
 }
 

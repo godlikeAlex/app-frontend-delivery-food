@@ -29,6 +29,7 @@ const UserOrders = ({auth, setReOrder, history}) => {
         const newOrder = {
             landmark: order.landmark,
             comment: order.comment,
+            restaurant: order.restaurant,
             ...order.cart
         }
         setReOrder(newOrder);
