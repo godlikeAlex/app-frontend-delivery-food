@@ -7,6 +7,8 @@ import markerImg from './pin.png'
 import { YMaps, Map, GeolocationControl } from 'react-yandex-maps';
 let ymaps;
 
+const API = process.env.REACT_APP_YANDEX_KEY;
+
 const MapSelector = props => {  
     const [region, setRegion] = useState({
         center: props.location.position ? props.location.position : {
@@ -58,7 +60,7 @@ const MapSelector = props => {
 
     return (
         <div className='map-container' style={{display: 'flex', justifyContent: 'center',  height: ' 100%', alignItems: 'center' }} onClick={closeMap}>
-            <YMaps query={{apikey: 'eb6a8eca-b3bf-41c2-b304-b9f5b255d3f1'}}>
+            <YMaps query={{apikey: API}}>
                 <Map onActionbegin={() => setDisabled(true)} onBoundschange={changeLocation} modules={['geocode']} onLoad={api => ymaps = api} style={{width: '95%',  height: '650px', background: 'white', borderRadius: '10px', position: 'relative'}} defaultState={{
                     center: [region.center.latitude, region.center.longitude],
                     zoom: region.zoom
