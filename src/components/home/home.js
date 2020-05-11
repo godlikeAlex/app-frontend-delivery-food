@@ -75,7 +75,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
     const loadMoreButton = () => {
         return (
             size > 0 && size >= limit && (
-                <Button onClick={loadMore} color='orange' loading={values.loading}>Загрузить еще рестораны</Button>
+                <Button onClick={loadMore} color='orange' disabled={values.placeholder} loading={values.loading}>Загрузить еще рестораны</Button>
             )
         )
     };
@@ -133,7 +133,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                 <Search style={{width: '255px'}} />
             </div>
             <div >
-                <SliderCategories />
+                <SliderCategories placeholder={values.placeholder} />
             </div>
             <Grid stackable columns={3} style={{marginTop: '20px'}}>
                 {values.placeholder ? placeholderRestaurants() : eachRestaurants()}             

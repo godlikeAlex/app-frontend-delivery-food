@@ -2,7 +2,7 @@ import React from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Button } from 'semantic-ui-react';
+import { Button, Loader } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -43,7 +43,7 @@ const settings = {
       ]
 };
 
-const SliderCategories = ({categories, setLoadMoreData, currentCategory, setFilters, setCurrentCategory}) => {
+const SliderCategories = ({placeholder, categories, setLoadMoreData, currentCategory, setFilters, setCurrentCategory}) => {
 
   const handleClick = id => {
     if(id === 'all') {
@@ -58,10 +58,14 @@ const SliderCategories = ({categories, setLoadMoreData, currentCategory, setFilt
   
   return ( 
     <div className='categories-restaurant'>
-        <Slider 
+        {placeholder ? 
+        (<Loader active inline='centered' >Загрузка</Loader>) 
+        : 
+        (
+          <Slider 
             {...settings}
-        >
-                <div className='slider-item'>
+          >
+              <div className='slider-item'>
                     <Button active={currentCategory === 'all'} onClick={() => handleClick('all')} inverted color='orange'>Все</Button>
                 </div>
             {categories && categories.map((category, i) => (
@@ -69,7 +73,8 @@ const SliderCategories = ({categories, setLoadMoreData, currentCategory, setFilt
                     <Button active={currentCategory === category._id} onClick={() => handleClick(category._id)} inverted color='orange'>{category.name}</Button>
                 </div>
             ))}
-        </Slider>
+          </Slider>
+        )}
     </div>
 )};
 
