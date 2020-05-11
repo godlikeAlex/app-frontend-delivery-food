@@ -11,14 +11,14 @@ const API = process.env.REACT_APP_YANDEX_KEY;
 
 const MapSelector = props => {  
     const [region, setRegion] = useState({
-        center: props.location.position ? props.location.position : {
+        center: props.location.position && props.location.position.latitude ? props.location.position : {
             latitude: 39.653173497797304,
             longitude: 66.97555186226964
         },
         zoom: 17
     });
 
-    const [adress, setAdress] = useState(props.location.address ? props.location.address : 'Укажите ваш адресс...');
+    const [adress, setAdress] = useState(props.location.address && props.location.position && props.location.position.latitude ? props.location.address : 'Укажите ваш адресс...');
     const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {

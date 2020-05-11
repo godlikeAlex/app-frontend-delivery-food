@@ -18,9 +18,9 @@ const UserOrders = ({auth, setReOrder, history}) => {
         getOrders(auth.token).then(data => {
             if(data.err) {
                 console.log(data.err);
-                return;
+            } else {
+                setOrders(data);
             }
-            setOrders(data);
             setLoading(false);
         })
     }, []);  // eslint-disable-line
