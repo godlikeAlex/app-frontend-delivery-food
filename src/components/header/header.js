@@ -7,6 +7,7 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 import { isAuth } from '../profile';
 import { signOut } from '../core/API';
+import logo from './logo.svg';
 import { useToasts } from 'react-toast-notifications';
 
 const Header = ({cart, showLogin, auth, setAuth, openLocation, location}) => {
@@ -55,7 +56,7 @@ const Header = ({cart, showLogin, auth, setAuth, openLocation, location}) => {
                 <div className={open ? 'menu-content menu-content-active' : 'menu-content'} >
                     <ul className='list-menu-right'>
                         <div class="header-mobile-menu">
-                            <Link to='/'><img alt='Логотип' src='https://eda.yandex/s3/assets/logo-2b8cf6236b94ab214aa24b00ce106d16.svg' /></Link>
+                            <Link to='/'><img alt='Логотип' src={logo} /></Link>
                             <Icon name='close' onClick={() => setOpen(false)} />
                         </div>
                         <li>
@@ -104,7 +105,7 @@ const Header = ({cart, showLogin, auth, setAuth, openLocation, location}) => {
             {rightMenuMobile()}
             <Container >
                 <div className='menu-items'>
-                    <Link to='/'><img alt='Логотип' src='https://eda.yandex/s3/assets/logo-2b8cf6236b94ab214aa24b00ce106d16.svg' /></Link>
+                    <Link to='/'><img alt='Логотип' style={{width: 130}} src={logo} /></Link>
                     <span className='right-menu-button only-phone'>
                         <Icon name='bars' onClick={() => setOpen(true)} />
                     </span>
