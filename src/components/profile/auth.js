@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Modal, Form, Header, Message } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -16,6 +16,11 @@ const AuthModal = ({open, showLogin, setAuth}) => {
     const [disable, setDisable] = useState(true);
     const [view, setView] = useState({signIn: true, verify: false, signUp: false});
     const { addToast } = useToasts();
+
+    useEffect(() => {
+        console.log(true);
+        setView({signIn: true, verify: false, signUp: false});
+    }, [open]);
 
     const handleClose = () => {
         showLogin(false);
