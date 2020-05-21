@@ -77,7 +77,7 @@ const Cart = ({cart, addQuantity, decQuantity, deleteFood, showLogin, currentRes
                             </Grid.Column>
                             <Grid.Column computer={4} mobile={6}>
                                 <div className="price-cart">
-                                    {item.total} Сум
+                                    {item.totalPrice} Сум
                                 </div>
                             </Grid.Column>
                             <Grid.Column computer={2} mobile={5}
