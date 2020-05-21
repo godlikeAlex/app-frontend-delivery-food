@@ -95,6 +95,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                         <Link to={`/restaurant/${restaurant._id}`}>
                         <div className='restaurant-item' key={key}>
                             <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
+                                <div className='restaurant-logo-item'></div>
                                 {restaurant.workTime && isClosed(restaurant.workTime.from, restaurant.workTime.to) && (
                                     <div className="restaurant-closed">
                                         <div className='restaurant-closed-content'>
