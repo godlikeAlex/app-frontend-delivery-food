@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Header, Grid, Button} from 'semantic-ui-react';
 import '../restaurant/restaurant.css';
-import Moto from '../restaurant/moto.svg';
 import {placeholderRestaurants} from '../placeholders';
 import {getFilteredProducts, getAllCategories} from '../core/API.js';
-import {linkImageRestaurant} from '../core/restaurantImg';
+import { linkImageRestaurant, linkRestaurantLogo } from '../core/restaurantImg';
 import SliderCategories from '../restaurant/sliderCategories';
 import {Link} from 'react-router-dom';
 import Search from '../search';
@@ -88,6 +87,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
         return !currentTime.isBetween(startTime , endTime);
     }
 
+
     const eachRestaurants = () => (
         <React.Fragment>
             {restaurants && restaurants.map((restaurant, key) => (
@@ -95,7 +95,9 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                         <Link to={`/restaurant/${restaurant._id}`}>
                         <div className='restaurant-item' key={key}>
                             <div className='restaurant-image' style={{background: `url(${linkImageRestaurant(restaurant._id)})`}}>
-                                <div className='restaurant-logo-item'></div>
+                                {restaurant.logo && <div className='restaurant-logo-item'>
+                                    <img src={linkRestaurantLogo(restaurant._id)} alt={restaurant.name} />
+                                </div>}
                                 {restaurant.workTime && isClosed(restaurant.workTime.from, restaurant.workTime.to) && (
                                     <div className="restaurant-closed">
                                         <div className='restaurant-closed-content'>
@@ -114,9 +116,11 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                                     ))}
                                 </div>
                                 <div className="restaurant-order-from">
-                                    От {restaurant.order_from} Сум
+                                    <div className='price-from'>
+                                        От {restaurant.order_from} Сум
+                                    </div>
                                     <div className='delivery-time'>
-                                        <img style={{paddingRight: '5px'}} src={Moto} alt=""/> {restaurant.delivery_time} мин
+                                        {restaurant.delivery_time} мин.
                                     </div>
                                 </div>
                             </div>

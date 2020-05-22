@@ -291,7 +291,9 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
             ) : (
                 <div style={{textAlign: 'center', marginTop: '60px'}}>
                     <h2 style={{fontSize: '40px'}}>Ресторан закрыт.</h2>
-                    <h2 style={{color: '#10b569'}}>Часы работы с {restaurant.workTime && restaurant.workTime.from} до {restaurant.to && restaurant.workTime.to}</h2>
+                    <h2 style={{color: '#10b569'}}>
+                        Часы работы с {restaurant.workTime && restaurant.workTime.from} до {restaurant.to && restaurant.workTime.to}
+                    </h2>
                     <LinkHref to='/'><Icon name='angle left' /> Все рестораны</LinkHref>
                 </div>
             )}

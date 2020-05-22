@@ -84,6 +84,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* margin-top: 5px; */
 }
 
 .restaurant-item .categories {
@@ -125,6 +126,16 @@
     display: flex;
     align-items: center;
     font-size: 13px;
+    padding: 5px 10px;
+    font-weight: 600;
+    background: #ff6500;
+    border-radius: 8px;
+    color: white;
+}
+
+.price-from {
+
+    color: #333;
 }
 
 .categories-restaurant {
@@ -384,5 +395,12 @@ transition: .3s;
     width: 50px;
     height: 50px;
     border-radius: 5px;
-    z-index: 2;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.restaurant-logo-item img {
+    width: 100%;
 }

@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 import { Link } from 'react-router-dom';
 import EmptyImg from './empty.svg';
+import { linkRestaurantLogo } from '../core/restaurantImg';
 
 const UserOrders = ({auth, setReOrder, history}) => {
     const [orders, setOrders] = useState([]);
@@ -41,9 +42,11 @@ const UserOrders = ({auth, setReOrder, history}) => {
             <Grid.Column computer={8} mobile={16}>
                 <div className='my-orders-item'>
                     <div className='header-order-item'>
-                        <div className="logo-order-item">
-
-                        </div>
+                        {order.restaurant.logo && (
+                            <div className="logo-order-item">
+                                <img src={linkRestaurantLogo(order.restaurant._id)} style={{width: '100%'}} alt='Логотип' />
+                            </div>
+                        )}
                         <div style={{width: '100%'}}>
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                 <Header as='h3' style={{margin: 0}}>{order.restaurant.name}</Header>
