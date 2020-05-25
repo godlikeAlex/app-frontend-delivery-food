@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../actions';
 import {registerOrder} from '../core/socket';
+import { getDeliveryInfo } from '../core/API';
 
 const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clearCart, currentRestaurant, openLocation}) => {
     const [checked, setChecked] = useState(false);
@@ -30,6 +31,20 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
 
     const [typeDelivery, setTypeDelivery] = useState('home');
     const [disable, setDisable] = useState(true);
+    const [deliveryPriceLoading, setDeliveryPriceLoading] = useState(true);
+    const [deliveryInfo, setDeliveryInfo] = useState({
+        distance: "3 км.",
+        price: 5000
+    });
+
+    useEffect(() => {
+        getDeliveryInfo(currentRestaurant._id, location.position.latitude, location.position.longitude).then(data => {
+            if(!data.err) {
+                setDeliveryInfo(data.delivery);
+                setDeliveryPriceLoading(false)
+            }
+        })
+    }, [location]); // eslint-disable-line
 
     useEffect(() => {
         if(history.location.pathname === '/checkout') {
@@ -49,6 +64,7 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             }
         }
     }, [inputs, typeDelivery, reOrder, history, setReOrder])
+
     const handleChange = e => {
         if(e.target.name === 'comment') {
             setInputs({...inputs, comment: e.target.value});
@@ -119,9 +135,10 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
             location,
             cart: reOrder ? reOrder: cart,
             landmark,
-            comment: inputs.comment
+            comment: inputs.comment,
+            deliveryInfo
         }
-        console.log(orderData);
+        
         const restaurant = reOrder ? reOrder.restaurant : currentRestaurant;
 
         registerOrder(orderData, restaurant._id, restaurant.name, err => {
@@ -194,8 +211,8 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
     )
 
     return (
-        <Container>
-            <Grid centered style={{marginTop: '10px'}}>
+        <Container >
+            <Grid centered style={{marginTop: '10px'}} >
                 {modal()}
                 <Grid.Column computer={8} mobile={16}>
                         {reOrder ? (
@@ -219,8 +236,8 @@ const Order = ({location, cart, history, showSuccess, reOrder, setReOrder, clear
                             {renderOrders(reOrder ? reOrder : cart)}
                             <h2>Итого:</h2>
                             <div className='space-between-item item-check'>Сумма заказа: <span>{reOrder ? reOrder.total : cart.total} Сум</span></div>
-                            <div className='space-between-item item-check'>Сумма доставки: <span>8000 Сум</span></div>
-                            <div className='space-between-item item-check'>Итого: <span>{reOrder ? reOrder.total : cart.total + 8000} Сум</span></div>
+                            <div className='space-between-item item-check'>Сумма доставки: <span>{deliveryPriceLoading ? 'Загружаем...' : `${deliveryInfo.price} Сум`}</span></div>
+                            <div className='space-between-item item-check'>Итого: <span>{reOrder ? reOrder.total : cart.total + deliveryInfo.price} Сум</span></div>
                         </div>
                         <div>
                             <img style={{width: '100%'}} alt='check-svg' src={check} />

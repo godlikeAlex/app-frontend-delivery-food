@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Container, Header, Grid, Button} from 'semantic-ui-react';
 import '../restaurant/restaurant.css';
 import {placeholderRestaurants} from '../placeholders';
@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 
-const Home = ({setCategories, filters, setLoadMoreData, categories, setRestaurants, loadMoreRestaurants, restaurants, loadMoreData}) => {
+const Home = ({setCategories, filters, location, setLoadMoreData, categories, setRestaurants, loadMoreRestaurants, restaurants, loadMoreData}) => {
     const [values, setValues] = useState({
         placeholder: true,
         error: '',
@@ -21,6 +21,23 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
     });
 
     const {skip, size, limit} = loadMoreData;
+
+    const isFirstRun = useRef(true);
+
+    useEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
+
+        setValues({...values, placeholder: true});
+        setLoadMoreData({skip: 0, limit: 6, size: 0});
+        loadFiltredResults(0, 6, filters, location && location.position);
+
+        return function cleanupLoadMore() {
+            setLoadMoreData({skip: 0, limit: 6, size: 0});
+        }
+    }, [location]); // eslint-disable-line
 
     useEffect(() => {
         setValues({...values, loading: true, placeholder: true});
@@ -38,8 +55,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
         }
 
         // @TODO LOAD ALL RESTAURANTS FROM REDUX IF IS EXISTS.
-
-        loadFiltredResults(skip, limit, filters);
+        loadFiltredResults(skip, limit, filters, location && location.position);
 
         return function cleanupLoadMore() {
             setLoadMoreData({skip: 0, limit: 6, size: 0});
@@ -48,8 +64,8 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
 
 
 
-    const loadFiltredResults = (skip, limit, filters) => {
-        getFilteredProducts(skip, limit, filters).then(restaurants => {
+    const loadFiltredResults = (skip, limit, filters, location) => {
+        getFilteredProducts(skip, limit, filters, location).then(restaurants => {
             if(restaurants.err) setValues({...values, error: restaurants.err})
             setValues({...values, placeholder: false, loading: false});
             setLoadMoreData({size: restaurants.size, skip:0});
@@ -61,7 +77,7 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
     const loadMore = () => {
         let toSkip = skip + limit;
         setValues({...values, loading: true});
-        getFilteredProducts(toSkip, limit, filters).then(data => {
+        getFilteredProducts(toSkip, limit, filters, location && location.position).then(data => {
             if(data.err) {
                 setValues({...values, error: data.err, loading: false})
             } else {
@@ -106,6 +122,9 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                                         </div>
                                     </div>
                                 )}
+                                {/* <div className='restaurant-time-delivery'>
+                                    25-35 мин
+                                </div> */}
                             </div>
                             <div className="main-info-restaurant">
                                 
@@ -116,12 +135,14 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
                                     ))}
                                 </div>
                                 <div className="restaurant-order-from">
-                                    <div className='price-from'>
+                                    <div className='price-from' >
                                         От {restaurant.order_from} Сум
                                     </div>
-                                    <div className='delivery-time'>
-                                        {restaurant.delivery_time} мин.
+
+                                    <div className='price-from' >
+                                        {restaurant.delivery.distance} ~ {restaurant.delivery.price} Сум
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -148,12 +169,13 @@ const Home = ({setCategories, filters, setLoadMoreData, categories, setRestauran
     )
 };
 
-const mapStateToProps = ({filters, restaurants,category, loadMoreData}) => {
+const mapStateToProps = ({filters, restaurants,category, loadMoreData, location}) => {
     return {
         filters,
         restaurants,
         categories: category.categories,
-        loadMoreData
+        loadMoreData,
+        location
     }
 };
 
