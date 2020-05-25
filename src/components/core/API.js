@@ -28,8 +28,10 @@ export const searchRestaurant = name => {
     })
 }
 
-export const getFilteredProducts = (skip, limit, filters = {}) => {
-    const data = {skip, limit, filters};
+export const getFilteredProducts = (skip, limit, filters = {}, location) => {
+    const data = {skip, limit, filters, location};
+
+    console.log(data);
 
     return fetch(`${API}/restaurants/by/search/`, {
         method: "POST",
@@ -130,6 +132,14 @@ export const getOrders = token => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
+    }).then(data => {
+        return data.json()
+    }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
+}
+
+export const getDeliveryInfo = (id, lat, lng) => {
+    return fetch(`${API}/restaurant/delivery/?id=${id}&lat=${lat}&lng=${lng}`, {
+        method: 'GET'
     }).then(data => {
         return data.json()
     }).catch(err => {store.dispatch({type:"SET_ERROR", payload: true})})
