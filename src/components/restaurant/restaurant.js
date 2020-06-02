@@ -17,10 +17,11 @@ import ScrollMenu from 'react-horizontal-scrolling-menu';
 
 let menuCategoryPos = null;
 
-const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
+const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setRestaurntnCurrent, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState(null);
+    const [quantity, setQuantity] = useState(1);
     const [categoryItems, setCategoryItems] = useState([]);
     const categoryMenu = useRef(null);
     const { addToast } = useToasts();
@@ -63,7 +64,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                 }
             }, 0);
             if(categoryItems) setCategoryItems(Menu(restaurant.menu_items ? restaurant.menu_items : [], 'item1'));
-            setPrice(dish.price + calculatedPriceOptions);
+            setCurrentPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
             window.addEventListener('scroll', handleScroll);
         }
@@ -74,6 +75,11 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
         }
 
     }, [match.params.id, dishOptions]);  // eslint-disable-line
+
+    useEffect(() => {
+        setPrice(dish.currentPrice * quantity);
+    }, [dish.currentPrice, quantity]); // eslint-disable-line
+
 
     const handleScroll = e => {
         const curPos = window.scrollY;
@@ -113,6 +119,14 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
         }
     };
 
+    const changeQuantity = (type) => {
+        if(type === 'add') { 
+            setQuantity(quant => quant + 1);
+        } else {
+            setQuantity(quant => quant === 1 ? 1 : quant - 1);
+        }
+    }
+
     const addToCart = () => {
 
         if(cart.items[0] && restaurant._id !== cart.items[0].restaurant ) {
@@ -125,10 +139,11 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
             _id: dish._id,
             uid: Math.floor(Math.random(25) * 9999),
             name: dish.name,
-            quantity: 1,
+            quantity,
             restaurant: dish.restaurant,
             options: dishOptions,
-            price: dish.totalPrice,
+            price: dish.price,
+            currentPrice: dish.currentPrice,
             totalPrice: dish.totalPrice
         }
         addFoodToCart(food);
@@ -144,9 +159,11 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
 
     const ModalProduct = () => (
         <Modal size='tiny' closeIcon={true} open={open} onClose={() => setOpen(false)}>
-          <Modal.Content>
+          <Modal.Content style={{padding: 0}} >
               <Modal.Description>
-                <Image src={`${linkMenuItemImage(dish._id)}` } fluid />
+                <Image src={`${linkMenuItemImage(dish._id)}` } fluid style={{borderRadius: '3px 3px 0px 0px'}} />
+                <div style={{padding: 15}}>
+
                 <h2>{dish.name}</h2>
                 <p>{dish.description}</p>
                 {dish.options.length > 0 && (
@@ -186,9 +203,19 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
                     ))}
                 </p>    
                 )}
-
-                <p><b>{dish.price} Сум</b></p>
-                <Button onClick={addToCart} disabled={Object.values(dishOptions).length !== dish.options.length} color='orange' style={{width: '100%'}}>Добавить в корзину на {dish.totalPrice} СУМ</Button>
+                <div style={{display: 'flex', justifyContent: 'space-between'}} >
+                    <div style={{display: 'flex'}}>
+                        <div className='button-quantity' onClick={() => changeQuantity('dec')}>
+                            <img alt='op' src="https://image.flaticon.com/icons/svg/1828/1828905.svg" style={{width: '20px'}} />
+                        </div>
+                        <div className='quantity-num'>{quantity}</div>
+                        <div className='button-quantity' onClick={() => changeQuantity('add')}>
+                            <img alt='op' src="https://image.flaticon.com/icons/svg/860/860785.svg" style={{width: '20px'}} />
+                        </div>
+                    </div>
+                    <Button onClick={addToCart} disabled={Object.values(dishOptions).length !== dish.options.length} color='orange' >Добавить в корзину на {dish.totalPrice} СУМ</Button>
+                </div>
+            </div>
             </Modal.Description>
           </Modal.Content>
         </Modal>
@@ -197,6 +224,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setRestaurntnCurrent, dis
     const showDetails = dish => {
         setDish(dish);
         setOpen(true);
+        setQuantity(1);
     }
 
     if(loading) {
@@ -311,7 +339,7 @@ const mapStateToProps = ({restaurant, dish, dishOptions, cart}) => {
 };
 
 const mapDispatchToProps = dispatch => {
-    const {setRestaurant, setDish, setRestaurntnCurrent, setDishOptions, setPrice, addToCart} = bindActionCreators(actions, dispatch);
+    const {setRestaurant, setDish, setRestaurntnCurrent, setDishOptions, setCurrentPrice, setPrice, addToCart} = bindActionCreators(actions, dispatch);
 
     return {
         setRestaurant: restaurant => {
@@ -331,6 +359,9 @@ const mapDispatchToProps = dispatch => {
         },
         setRestaurntnCurrent: item => {
             setRestaurntnCurrent(item);
+        },
+        setCurrentPrice: price => {
+            setCurrentPrice(price);
         }
     }
 }

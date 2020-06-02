@@ -21,3 +21,4 @@ export const CLEAR_CART = 'CLEAR_CART';
 export const CURRENT_RESTAURANT = 'CURRENT_RESTAURANT';
 export const SET_ERROR = 'SET_ERROR';
 export const OPEN_LOCATION = 'OPEN_LOCATION';
+export const SET_CURRENT_PRICE = 'SET_CURRENT_PRICE';

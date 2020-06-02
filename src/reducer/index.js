@@ -20,7 +20,8 @@ import {
     SET_REORDER,
     CURRENT_RESTAURANT,
     SET_ERROR,
-    OPEN_LOCATION
+    OPEN_LOCATION,
+    SET_CURRENT_PRICE
 } from '../types';
 import { SET_FILTER } from '../types/index';
 
@@ -106,7 +107,7 @@ const updateCartItem = (item, quantity) => {
     return {
         ...item,
         quantity,
-        totalPrice: item.price * quantity
+        totalPrice: item.currentPrice * quantity
     }
 }
 
@@ -219,6 +220,13 @@ const locationReducer = (state = initalState, action) => {
             dish: {
                 ...state.dish,
                 totalPrice: action.payload
+            }
+        }
+        case SET_CURRENT_PRICE: return {
+            ...state, 
+            dish: {
+                ...state.dish,
+                currentPrice: action.payload
             }
         }
         case SET_DISH_OPTIONS: return {

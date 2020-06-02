@@ -104,3 +104,23 @@ h1 {
 .slick-next {
   right: -14px
 }
+
+.button-quantity {
+    width: 35px;
+    height: 35px;
+    background: #efefef;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 41px;
+}
+
+.quantity-num {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

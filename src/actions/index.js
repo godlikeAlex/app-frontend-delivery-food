@@ -21,7 +21,8 @@ import {
     CLEAR_CART,
     CURRENT_RESTAURANT,
     SET_ERROR,
-    OPEN_LOCATION
+    OPEN_LOCATION,
+    SET_CURRENT_PRICE
 } from '../types';
 import { updateTokenInSocket } from '../components/core/socket';
 
@@ -106,6 +107,13 @@ export const setDish = payload => {
 export const setPrice = payload => {
     return {
         type: SET_TOTAL_PRICE,
+        payload
+    }
+}
+
+export const setCurrentPrice = payload => {
+    return {
+        type: SET_CURRENT_PRICE,
         payload
     }
 }
