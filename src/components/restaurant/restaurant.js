@@ -20,9 +20,11 @@ let menuCategoryPos = null;
 const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setRestaurntnCurrent, dish, cart, setDish, setDishOptions, dishOptions, setPrice, appendToCart}) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [disabled, setDisabled] = useState(true);
     const [selected, setSelected] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [categoryItems, setCategoryItems] = useState([]);
+    const [requiredFields, setRequiredFields] = useState([]);
     const categoryMenu = useRef(null);
     const { addToast } = useToasts();
 
@@ -64,6 +66,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                 }
             }, 0);
             if(categoryItems) setCategoryItems(Menu(restaurant.menu_items ? restaurant.menu_items : [], 'item1'));
+            
             setCurrentPrice(dish.price + calculatedPriceOptions);
             setLoading(false);
             window.addEventListener('scroll', handleScroll);
@@ -80,6 +83,12 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
         setPrice(dish.currentPrice * quantity);
     }, [dish.currentPrice, quantity]); // eslint-disable-line
 
+    useEffect(() => {
+        const noRequiredFields = requiredFields.every(elem => elem.checked === true);
+        setDisabled(!noRequiredFields);
+    }, [requiredFields]); // eslint-disable-line
+
+
 
     const handleScroll = e => {
         const curPos = window.scrollY;
@@ -94,13 +103,22 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
 
     }
 
-    const handleOption = ({category, option}, multiSelect = false) => (e, {value}) => {
+    const handleOption = ({category, option, id, value: currentValue}, multiSelect = false) => (e, {value}) => {
+
         if(multiSelect) {
             const isArr = Array.isArray(dishOptions[category]);
             
             if(!isArr) {
                 let newArr = [];
                 newArr.push(option);
+                const updateRequiredFields = requiredFields.map(item => {
+                    if(item._id === id) return {
+                        ...item,
+                         checked: newArr.length > 0 
+                    }
+                    return item;
+                });
+                setRequiredFields(updateRequiredFields);
                 setDishOptions(category, newArr);
                 return;
             };
@@ -113,8 +131,22 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                 newOptions.push(option);
             }
 
+            const updateRequiredFields = requiredFields.map(item => {
+                if(item._id === id) return {
+                    ...item,
+                     checked: newOptions.length > 0 
+                }
+                return item;
+            });
+            setRequiredFields(updateRequiredFields);
+
             setDishOptions(category, newOptions);
         } else {
+            const updateRequiredFields = requiredFields.map(item => {
+                if(item._id === id) return {...item, checked: true}
+                return item;
+            });
+            setRequiredFields(updateRequiredFields);
             setDishOptions(category, option);
         }
     };
@@ -168,8 +200,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                 <p>{dish.description}</p>
                 {dish.options.length > 0 && (
                 <p>
-                    <h3>Дополнительно:</h3>
-                    {dish.options.length > 0 && dish.options.map(({name, options, multiSelect = false}) => (
+                    {dish.options.length > 0 && dish.options.map(({_id, name, options, multiSelect = false}) => (
                         <React.Fragment>
                             <h3>{name}</h3>
                             {options.map(option => (
@@ -180,7 +211,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                                             dishOptions[name] && dishOptions[name].findIndex(opt => opt._id === option._id) !== -1 ? true : false
                                         } 
                                         value={option.price}
-                                        onChange={handleOption({'category': name, option}, true)} 
+                                        onChange={handleOption({'category': name, option, id: _id, value: dishOptions[name] && dishOptions[name].findIndex(opt => opt._id === option._id) !== -1 ? true : false}, true)} 
                                         label={`${option.name} + ${option.price} сум`} 
                                     />
                                 </div>
@@ -192,8 +223,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                                                 checked={
                                                     dishOptions[name] && dishOptions[name]._id === option._id
                                                 } 
-                                                value={option.price}
-                                                onChange={handleOption({'category': name, option})} 
+                                                onChange={handleOption({'category': name, option, id: _id, value: dishOptions[name] && dishOptions[name]._id === option._id ? true : false})} 
                                                 label={`${option.name} + ${option.price} сум`} 
                                             />
                                     </div>
@@ -213,7 +243,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                             <img alt='op' src="https://image.flaticon.com/icons/svg/860/860785.svg" style={{width: '20px'}} />
                         </div>
                     </div>
-                    <Button onClick={addToCart} disabled={Object.values(dishOptions).length !== dish.options.length} color='orange' >Добавить в корзину на {dish.totalPrice} СУМ</Button>
+                    <Button onClick={addToCart} disabled={disabled} color='orange' >Добавить в корзину на {dish.totalPrice} СУМ</Button>
                 </div>
             </div>
             </Modal.Description>
@@ -223,6 +253,13 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
 
     const showDetails = dish => {
         setDish(dish);
+        if(dish.options && dish.options.length > 0) {
+            const getRequiredFields = dish.options.filter(item => {
+                item.checked = false;
+                return item.required === true;
+            });
+            setRequiredFields(getRequiredFields);   
+        }
         setOpen(true);
         setQuantity(1);
     }
