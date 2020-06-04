@@ -193,7 +193,7 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
         <Modal size='tiny' closeIcon={true} open={open} onClose={() => setOpen(false)}>
           <Modal.Content style={{padding: 0}} >
               <Modal.Description>
-                <Image src={`${linkMenuItemImage(dish._id)}` } fluid style={{borderRadius: '3px 3px 0px 0px'}} />
+                <div style={{height: 350, borderRadius: '3px 3px 0px 0px', background: `url(${linkMenuItemImage(dish._id)})`, backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
                 <div style={{padding: 15}}>
 
                 <h2>{dish.name}</h2>
@@ -202,7 +202,17 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                 <p>
                     {dish.options.length > 0 && dish.options.map(({_id, name, options, multiSelect = false}) => (
                         <React.Fragment>
-                            <h3>{name}</h3>
+                            <div style={{display: 'flex', marginTop: 10, justifyContent: 'space-between', alignItems: 'center'}}>
+                                <h3 style={{marginBottom: 0}}>{name}</h3>
+                                <div
+                                    style={{
+                                        color: '#ce0000',
+                                        border: '1px solid',
+                                        borderRadius: '5px',
+                                        padding: '5px'
+                                    }}
+                                >Обязательная опция</div>
+                            </div>
                             {options.map(option => (
                                 multiSelect ? (
                                     <div style={{paddingTop: '10px'}}>
