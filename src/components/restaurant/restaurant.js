@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Container, Icon, Grid, Modal, Button, Image, Radio, Dimmer, Loader, Checkbox} from 'semantic-ui-react';
+import {Container, Icon, Grid, Modal, Button, Radio, Dimmer, Loader, Checkbox} from 'semantic-ui-react';
 import { getRestaurant } from '../core/API';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
