@@ -200,18 +200,18 @@ const Restaurant = ({match, restaurant, setRestaurant, setCurrentPrice, setResta
                 <p>{dish.description}</p>
                 {dish.options.length > 0 && (
                 <p>
-                    {dish.options.length > 0 && dish.options.map(({_id, name, options, multiSelect = false}) => (
+                    {dish.options.length > 0 && dish.options.map(({_id, name, options, multiSelect = false, required}) => (
                         <React.Fragment>
                             <div style={{display: 'flex', marginTop: 10, justifyContent: 'space-between', alignItems: 'center'}}>
                                 <h3 style={{marginBottom: 0}}>{name}</h3>
-                                <div
+                                {required && <div
                                     style={{
                                         color: '#ce0000',
                                         border: '1px solid',
                                         borderRadius: '5px',
                                         padding: '5px'
                                     }}
-                                >Обязательная опция</div>
+                                >Обязательная опция</div> }
                             </div>
                             {options.map(option => (
                                 multiSelect ? (
