@@ -124,3 +124,69 @@ h1 {
   justify-content: center;
   align-items: center;
 }
+
+.owl-nav {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  margin: 0 !important;
+  width: 100%;
+  z-index: -1 !important;
+}
+
+.owl-next {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  right: -45px !important;
+  width: 40px !important;
+  height: 40px !important;
+  top: 0% !important;
+  margin: 0 !important;
+  background: #efefef !important;
+  border-radius: 100% !important;
+  transition: .5s !important;
+}
+
+
+.owl-prev:focus {
+  outline: none !important;
+}
+
+
+
+.owl-next:focus {
+  outline: none !important;
+}
+
+.owl-prev {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  left: -45px !important;
+  width: 40px !important;
+  height: 40px !important;
+  top: 0% !important;
+  margin: 0 !important;
+  transition: .5s !important;
+  background: #efefef !important;
+  border-radius: 100% !important;
+}
+
+.owl-prev:hover {
+  background: #ff6500 !important;
+}
+
+.owl-next:hover {
+  background: #ff6500 !important;
+}
+
+.owl-prev img {
+  width: 35%
+}
+
+.owl-next img {
+  width: 35%
+}

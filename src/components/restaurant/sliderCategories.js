@@ -1,49 +1,17 @@
-import React from 'react';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Button, Loader } from 'semantic-ui-react';
+import React, {useState} from 'react';
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
+import { Loader } from 'semantic-ui-react';
+import PrevImg from './prev.svg';
+import NextImg from './next.svg';
 
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions';
 
-const settings = {
-      dots: false,
-      infinite: false,
-      speed: 300,
-      slidesToShow: 6,
-      slidesToScroll: 4,
-      initialSlide: 0,
-      responsive: [
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 3,
-            infinite: true,
-            dots: false
-          }
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 2,
-            initialSlide: 2
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 1
-          }
-        }
-      ]
-};
-
-const SliderCategories = ({placeholder, categories, setLoadMoreData, currentCategory, setFilters, setCurrentCategory}) => {
+const Categories = ({categories, setFilters, setLoadMoreData}) => {
+  const [currentCategory, setCurrentCategory] = useState('all');
 
   const handleClick = id => {
     if(id === 'all') {
@@ -51,48 +19,57 @@ const SliderCategories = ({placeholder, categories, setLoadMoreData, currentCate
       setFilters({category: {}});
       return;
     }
-    setLoadMoreData({skip: 0, size: 0})
     setCurrentCategory(id);
     setFilters({category: id});
   }
-  
+
+  console.log(currentCategory)
+
+  return (
+    <>
+    <div onClick={() => handleClick('all')} key={'all-cat'}>
+        <div className={currentCategory === 'all' ? 'slider-item slider-item-active' : 'slider-item'} >
+            Все рестораны
+        </div>
+    </div>
+    {categories && categories.map((category, i) => (
+      <div onClick={() => handleClick(category._id)} key={i}>
+        <div className={currentCategory === category._id ? 'slider-item slider-item-active' : 'slider-item'} active={currentCategory === category._id }  >
+            {category.name}
+        </div>
+      </div>
+    ))}
+    </>
+  )
+}
+
+const SliderCategories = ({categories, setFilters, setLoadMoreData}) => {
   return ( 
     <div className='categories-restaurant'>
-        {placeholder ? 
-        (<Loader active inline='centered' >Загрузка</Loader>) 
-        : 
-        (
-          <Slider 
-            {...settings}
-          >
-              <div className='slider-item'>
-                    <Button active={currentCategory === 'all'} onClick={() => handleClick('all')} inverted color='orange'>Все</Button>
-                </div>
-            {categories && categories.map((category, i) => (
-                <div className='slider-item' key={i}>
-                    <Button active={currentCategory === category._id} onClick={() => handleClick(category._id)} inverted color='orange'>{category.name}</Button>
-                </div>
-            ))}
-          </Slider>
-        )}
+            <OwlCarousel
+                className="owl-theme"
+                items={5}
+                margin={15}
+                dots={false}
+                nav
+                navText={[`<img src=${PrevImg} />`, `<img src=${NextImg} />`]}
+            >
+              <Categories categories={categories} setFilters={setFilters} setLoadMoreData={setLoadMoreData} />
+          </OwlCarousel>
     </div>
 )};
 
-const mapStateToProps = ({category, filters}) => {
+const mapStateToProps = ({category}) => {
   return {
-    currentCategory: category.current,
     categories: category.categories,
-    filters
   }
 };
 
+
 const mapDispatchToProps = dispatch => {
-  const {setCurrentCategory, setFilters, setLoadMoreData} = bindActionCreators(actions, dispatch);
+  const {setFilters, setLoadMoreData} = bindActionCreators(actions, dispatch);
 
   return {
-    setCurrentCategory: category => {
-      setCurrentCategory(category);
-    },
     setFilters: filters => {
       setFilters(filters);
     },

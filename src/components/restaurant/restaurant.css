@@ -63,12 +63,25 @@
 }
 
 .slider-item {
-    border: 2px solid #ff6500;
     font-weight: 600;
     text-align: center;
-    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: 0 0 0 2px #ff851b inset!important;
+    color: #ff851b;
+    padding: 10px;
     cursor: pointer;
-    padding: 0.5rem;
+    transition: .3s;
+    border-radius: 5px;
+}
+
+.slider-item-active {
+    background: #ff851b;
+    color: white;
+}
+
+.slider-item:hover {
+    background: #ff851b;
+    color: white;
 }
 
 .restaurant-name {
